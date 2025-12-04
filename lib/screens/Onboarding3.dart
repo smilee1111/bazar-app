@@ -14,7 +14,7 @@ class Onboarding3 extends StatelessWidget {
       backgroundColor: AppColors.background,
         body:  GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, '/onboarding3');  
+            Navigator.pushNamed(context, '/DashboardScreen');
           },
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -75,10 +75,21 @@ class Onboarding3 extends StatelessWidget {
                                   style: AppTextStyle.landingTexts,
                                   ),
                                 ),
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Text('🔎 Search for the perfect shop to buy anything ',
+                                  style: AppTextStyle.landingTexts,
+                                  ),
+                                ),
+                               
                               ],
                               )
                           
                           ),
+                        ),
+                        SizedBox(height: 10),
+                        Image.asset('assets/images/image2.png',
+                        height: 150,
                         ),
                       ],
                     )
