@@ -7,6 +7,9 @@ class LandingPageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+      ),
       body: Column(
         children: [
           Expanded(
@@ -18,7 +21,7 @@ class LandingPageScreen extends StatelessWidget {
               'assets/images/bgimage.png',
               width: double.infinity,
               height: double.infinity,
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.fill,
               ),
               
             ),
@@ -44,7 +47,7 @@ class LandingPageScreen extends StatelessWidget {
                     width: 150,
                     child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/OnboardingScreen');
+                      Navigator.pushNamed(context, '/RegisterScreen');
                     },
                     style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 7,horizontal: 10),

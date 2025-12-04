@@ -8,6 +8,9 @@ class Dashboardscreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: AppColors.background,
+      ),
       body: Column(
         children: [
           Expanded(
@@ -19,7 +22,7 @@ class Dashboardscreen extends StatelessWidget {
               'assets/images/bgimage.png',
               width: double.infinity,
               height: double.infinity,
-              fit: BoxFit.fitHeight,
+              fit: BoxFit.fill,
               ),
               
             ),
@@ -42,7 +45,6 @@ class Dashboardscreen extends StatelessWidget {
                     ),
                   ),
                   SizedBox(
-                    
                     child: Text("I am Home Screen",
                     style: AppTextStyle.landingTexts,),
                   ),
