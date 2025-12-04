@@ -1,41 +1,224 @@
+import 'package:bazar/theme/colors.dart';
+import 'package:bazar/theme/textstyle.dart';
 import 'package:flutter/material.dart';
 
-class Signuppagescreen extends StatelessWidget {
+class Signuppagescreen extends StatefulWidget {
   const Signuppagescreen({super.key});
 
   @override
+  State<Signuppagescreen> createState() => _SignuppagescreenState();
+}
+
+class _SignuppagescreenState extends State<Signuppagescreen> {
+ 
+  @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(15.0),
+      backgroundColor: AppColors.background,
+      appBar: AppBar(
+       
+        backgroundColor: AppColors.background,
+        ),
+      body: 
+      Padding(
+        padding: const EdgeInsets.all(25.0),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            
-             TextFormField(
-                  keyboardType: TextInputType.number,
-                  
-                  decoration: InputDecoration(
-                    labelText: "Enter second no:",
-                    hintText: "e.g",
-                   border:  OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: Colors.purple)
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: Colors.red),
-                    )
+            Row(
+              children: [
+                Container(
+                  child: Image.asset('assets/images/bazarlogo.png',
+                  width: 90,
+                  height: 90,
                   ),
-                  validator: (value){
-                    if(value==null || value.isEmpty){
-                      return "Please enter first number.";
-                    }
-                    return null;
-                    },
                 ),
+                SizedBox(width: 25),
+                Text("Let's get you\nshopping smarter.",
+                style: AppTextStyle.h1,
+                )
+              ],
+            ),
+            SizedBox(height: 10),
+            Text('enter your details below',
+            style: TextStyle(
+              fontSize: 16
+            ),),
+            SizedBox(height: 30),
+             TextFormField(
+            keyboardType: TextInputType.text,
+            style: AppTextStyle.inputBox,
+            decoration: InputDecoration(
+              labelText: "Full Name",
+              hintText: "e.g: John Doe",
+              border:  OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                borderSide: BorderSide(color: AppColors.accent)
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                borderSide: BorderSide(color: AppColors.accent),
+              )
+            ),
+            validator: (value){
+              if(value==null || value.isEmpty){
+                return "Please enter your full name.";
+              }
+              return null;
+              },
+          ),
+          SizedBox(height: 15),
+          TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            style: AppTextStyle.inputBox,
+            decoration: InputDecoration(
+              labelText: "Email Address",
+              hintText: "e.g: example.com",
+              border:  OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                borderSide: BorderSide(color: AppColors.accent)
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                borderSide: BorderSide(color: AppColors.accent),
+              )
+            ),
+            validator: (value){
+              if(value==null || value.isEmpty){
+                return "Please enter your email address.";
+              }
+              return null;
+              },
+          ),
+          SizedBox(height: 15),
+          TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            style: AppTextStyle.inputBox,
+            decoration: InputDecoration(
+              labelText: "Username",
+              hintText: "e.g: john_doe123",
+              border:  OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                borderSide: BorderSide(color: AppColors.accent)
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                borderSide: BorderSide(color: AppColors.accent),
+              )
+            ),
+            validator: (value){
+              if(value==null || value.isEmpty){
+                return "Please enter your username.";
+              }
+              return null;
+              },
+          ),
+          SizedBox(height: 15),
+          TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            style: AppTextStyle.inputBox,
+            decoration: InputDecoration(
+              labelText: "Password",
+              hintText: "password must have special characters",
+              border:  OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                borderSide: BorderSide(color: AppColors.accent)
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                borderSide: BorderSide(color: AppColors.accent),
+              )
+            ),
+            validator: (value){
+              if(value==null || value.isEmpty){
+                return "Please enter your password.";
+              }
+              return null;
+              },
+          ),
+          SizedBox(height: 15),
+          TextFormField(
+            keyboardType: TextInputType.emailAddress,
+            style: AppTextStyle.inputBox,
+            decoration: InputDecoration(
+              labelText: "Confirm Password",
+              hintText: "password must have special characters",
+              border:  OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                borderSide: BorderSide(color: AppColors.accent)
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                borderSide: BorderSide(color: AppColors.accent),
+              )
+            ),
+            validator: (value){
+              if(value==null || value.isEmpty){
+                return "Please enter your password.";
+              }
+              return null;
+              },
+          ),
+          SizedBox(height: 15,),
+          SizedBox(
+            width: 150,
+            child: ElevatedButton(
+              onPressed: () {}, 
+              style: ElevatedButton.styleFrom(
+              backgroundColor: const Color.fromRGBO(82, 70, 50, 1),
+              minimumSize: Size(double.infinity, 50),
+              shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10)
+              )
+              ),
+              child: Text("SIGN UP",
+              style: AppTextStyle.inputBox.copyWith(color: Colors.white),),
+            ),
+          ),
+          TextButton(onPressed: () {}, child: Text("Already have an account? Sign In",
+          style: AppTextStyle.minimalTexts.copyWith(
+          decoration: TextDecoration.underline,))),
+            Container(
+            width:500,
+            height: 85,
+            alignment: Alignment.centerRight,
+            decoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10)
+              ),
+              child:
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text('Continue with Google', 
+                    style: AppTextStyle.minimalTexts,),
+                    SizedBox(width: 20),
+                    Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/960px-Google_Favicon_2025.svg.png',
+                    width: 40,
+                    height: 40,)
+                  ],
+                ),
+              )
+            )
           ]
             
         ),
