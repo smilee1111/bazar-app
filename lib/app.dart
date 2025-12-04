@@ -1,4 +1,5 @@
 import 'package:bazar/screens/LandingPageScreen.dart';
+import 'package:bazar/screens/LoginPageScreen.dart';
 import 'package:bazar/screens/SignupPageScreen.dart';
 import 'package:flutter/material.dart';
 
@@ -8,7 +9,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Signuppagescreen(),
+      home: Loginpagescreen(),
     );
   }
 }

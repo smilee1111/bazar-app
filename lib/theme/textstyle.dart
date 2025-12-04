@@ -17,6 +17,12 @@ class AppTextStyle {
     color: darkTextColor,
   );
 
+ static const TextStyle buttonText = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 23,
+    fontWeight: FontWeight.w500,
+    color: Colors.white,
+  );
   static const TextStyle inputBox = TextStyle(
     fontFamily: fontFamily,
     fontSize: 14,

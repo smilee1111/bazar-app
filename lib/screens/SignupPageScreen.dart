@@ -22,8 +22,9 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
         ),
       body: 
       Padding(
-        padding: const EdgeInsets.all(25.0),
+        padding: const EdgeInsets.all(20.0),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Row(
@@ -34,7 +35,7 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                   height: 90,
                   ),
                 ),
-                SizedBox(width: 25),
+                SizedBox(width: 20),
                 Text("Let's get you\nshopping smarter.",
                 style: AppTextStyle.h1,
                 )
@@ -151,29 +152,29 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
           ),
           SizedBox(height: 15),
           TextFormField(
-            keyboardType: TextInputType.emailAddress,
-            style: AppTextStyle.inputBox,
-            decoration: InputDecoration(
-              labelText: "Confirm Password",
-              hintText: "password must have special characters",
-              border:  OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-              ),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                borderSide: BorderSide(color: AppColors.accent)
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                borderSide: BorderSide(color: AppColors.accent),
-              )
+          keyboardType: TextInputType.emailAddress,
+          style: AppTextStyle.inputBox,
+          decoration: InputDecoration(
+            labelText: "Confirm Password",
+            hintText: "password must have special characters",
+            border:  OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
             ),
-            validator: (value){
-              if(value==null || value.isEmpty){
-                return "Please enter your password.";
-              }
-              return null;
-              },
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              borderSide: BorderSide(color: AppColors.accent)
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(10.0)),
+              borderSide: BorderSide(color: AppColors.accent),
+            )
+          ),
+          validator: (value){
+            if(value==null || value.isEmpty){
+              return "Please enter your password.";
+            }
+            return null;
+            },
           ),
           SizedBox(height: 15,),
           SizedBox(
@@ -188,7 +189,7 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
               )
               ),
               child: Text("SIGN UP",
-              style: AppTextStyle.inputBox.copyWith(color: Colors.white),),
+              style: AppTextStyle.buttonText,),
             ),
           ),
           TextButton(onPressed: () {}, child: Text("Already have an account? Sign In",
@@ -214,7 +215,7 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                     SizedBox(width: 20),
                     Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/960px-Google_Favicon_2025.svg.png',
                     width: 40,
-                    height: 40,)
+                    height: 40)
                   ],
                 ),
               )
