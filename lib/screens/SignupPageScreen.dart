@@ -235,7 +235,7 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                         children: [
                           Text('Continue with Google', 
                           style: AppTextStyle.minimalTexts,),
-                          SizedBox(width: 20),
+                          SizedBox(width: 10),
                           Image.network('https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/960px-Google_Favicon_2025.svg.png',
                           width: 40,
                           height: 40)
