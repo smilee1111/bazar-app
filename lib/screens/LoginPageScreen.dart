@@ -145,8 +145,7 @@ return Scaffold(
                 children: [
                   Text('Continue with Google', style: AppTextStyle.minimalTexts),
                   const SizedBox(width: 10),
-                  Image.network(
-                    'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Google_Favicon_2025.svg/960px-Google_Favicon_2025.svg.png',
+                  Image.asset('assets/icons/googlelogo.png',
                     width: 40,
                     height: 40,
                   ),
