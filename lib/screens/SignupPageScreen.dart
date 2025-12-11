@@ -23,19 +23,15 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
   Widget build(BuildContext context) {
     
     return Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.background,
-        ),
       body: 
       Form(
         key: _formKey,
         child: SafeArea(
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.all(30.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Row(
@@ -54,28 +50,14 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                   ),
                   SizedBox(height: 10),
                   Text('enter your details below',
-                  style: TextStyle(
-                    fontSize: 16
-                  ),),
+                  style: AppTextStyle.minimalTexts,),
                   SizedBox(height: 30),
                   TextFormField(
                   controller: fullnameController,
                   keyboardType: TextInputType.text,
-                  style: AppTextStyle.inputBox,
                   decoration: InputDecoration(
                     labelText: "Full Name",
-                    hintText: "e.g: John Doe",
-                    border:  OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: AppColors.accent)
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: AppColors.accent),
-                    )
+                    hintText: "e.g: Ram kc",
                   ),
                   validator: (value){
                     if(value==null || value.isEmpty){
@@ -88,21 +70,9 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                 TextFormField(
                   controller: emailController,
                   keyboardType: TextInputType.emailAddress,
-                  style: AppTextStyle.inputBox,
                   decoration: InputDecoration(
                     labelText: "Email Address",
                     hintText: "e.g: example.com",
-                    border:  OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: AppColors.accent)
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: AppColors.accent),
-                    )
                   ),
                   validator: (value){
                     if(value==null || value.isEmpty){
@@ -115,21 +85,9 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                 TextFormField(
                   controller: usernameController,
                   keyboardType: TextInputType.text,
-                  style: AppTextStyle.inputBox,
                   decoration: InputDecoration(
                     labelText: "Username",
                     hintText: "e.g: john_doe123",
-                    border:  OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: AppColors.accent)
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: AppColors.accent),
-                    )
                   ),
                   validator: (value){
                     if(value==null || value.isEmpty){
@@ -142,21 +100,9 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                 TextFormField(
                   controller: passwordController,
                   keyboardType: TextInputType.visiblePassword,
-                  style: AppTextStyle.inputBox,
                   decoration: InputDecoration(
                     labelText: "Password",
                     hintText: "password must have special characters",
-                    border:  OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: AppColors.accent)
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                      borderSide: BorderSide(color: AppColors.accent),
-                    )
                   ),
                   validator: (value){
                     if(value==null || value.isEmpty){
@@ -169,21 +115,9 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                 TextFormField(
                 controller: confirmPasswordController,
                 keyboardType: TextInputType.visiblePassword,
-                style: AppTextStyle.inputBox,
                 decoration: InputDecoration(
                   labelText: "Confirm Password",
                   hintText: "password must have special characters",
-                  border:  OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    borderSide: BorderSide(color: AppColors.accent)
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                    borderSide: BorderSide(color: AppColors.accent),
-                  )
                 ),
                 validator: (value){
                   if(value==null || value.isEmpty){
@@ -200,16 +134,8 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                        if(_formKey.currentState!.validate()){
                         Navigator.pushNamed(context, '/OnboardingScreen');
                        }
-                    }, 
-                    style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromRGBO(82, 70, 50, 1),
-                    minimumSize: Size(double.infinity, 50),
-                    shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10)
-                    )
-                    ),
-                    child: Text("SIGN UP",
-                    style: AppTextStyle.buttonText,),
+                    },
+                    child: Text("SIGN UP"),
                   ),
                 ),
                 TextButton(onPressed: () {
@@ -218,9 +144,9 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                 }, child: Text("Already have an account? Sign In",
                 style: AppTextStyle.minimalTexts.copyWith(
                 decoration: TextDecoration.underline,))),
-                  Container(
+                Container(
                   width:500,
-                  height: 85,
+                  height: 80,
                   alignment: Alignment.centerRight,
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
@@ -237,8 +163,8 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                           style: AppTextStyle.minimalTexts,),
                           SizedBox(width: 10),
                           Image.asset('assets/icons/googlelogo.png',
-                          width: 40,
-                          height: 40)
+                          width: 30,
+                          height: 30)
                         ],
                       ),
                     )

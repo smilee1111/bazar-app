@@ -8,16 +8,12 @@ class Onboarding3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar( 
-        backgroundColor: AppColors.background,
-      ),
-      backgroundColor: AppColors.background,
         body:  GestureDetector(
           onTap: () {
             Navigator.pushNamed(context, '/DashboardScreen');
           },
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(30),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -21,8 +21,9 @@ class AppTextStyle {
     fontFamily: fontFamily,
     fontSize: 23,
     fontWeight: FontWeight.w500,
-    color: Colors.white,
+    color: lightTextColor,
   );
+  
   static const TextStyle inputBox = TextStyle(
     fontFamily: fontFamily,
     fontSize: 14,

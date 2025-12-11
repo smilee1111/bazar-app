@@ -7,6 +7,7 @@ import 'package:bazar/screens/Onboarding3.dart';
 import 'package:bazar/screens/OnboardingScreen.dart';
 import 'package:bazar/screens/SignupPageScreen.dart';
 import 'package:bazar/screens/SplashScreen.dart';
+import 'package:bazar/theme/theme_data.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {
@@ -15,6 +16,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      theme: getApplicationTheme(),
       initialRoute: '/SplashScreen',
       routes:{
         '/SplashScreen': (context) => const Splashscreen(),

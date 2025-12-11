@@ -1,4 +1,5 @@
 import 'package:bazar/theme/colors.dart';
+import 'package:bazar/theme/textstyle.dart';
 import 'package:flutter/material.dart';
 
 class Splashscreen extends StatefulWidget {
@@ -35,11 +36,8 @@ class _SplashscreenState extends State<Splashscreen> {
               height: double.infinity,
               fit: BoxFit.fill
               ),
-              
             ),
-            
           ),
-          
           Expanded(
             flex: 3,
             child: Container(
@@ -51,12 +49,7 @@ class _SplashscreenState extends State<Splashscreen> {
                   Image.asset('assets/images/bazarlogo.png',),
                   Text(
                     "Find your Shop.",
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.brown[500],
-                    ),
+                    style: AppTextStyle.minimalTexts
                   ),
                   
                 

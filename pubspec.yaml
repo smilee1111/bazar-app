@@ -64,11 +64,17 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   fonts:
-    - family: Poppins
+    - family: Poppins Regular
       fonts:
         - asset: assets/fonts/Poppins-Regular.ttf
+    - family: Poppins Medium
+      fonts:
         - asset: assets/fonts/Poppins-Medium.ttf
+    - family: Poppins SemiBold
+      fonts:
         - asset: assets/fonts/Poppins-SemiBold.ttf
+    - family: Poppins Bold
+      fonts:
         - asset: assets/fonts/Poppins-Bold.ttf
 
   # An image asset can refer to one or more resolution-specific "variants", see
