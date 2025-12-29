@@ -49,7 +49,7 @@ class _SplashscreenState extends State<Splashscreen> {
                   Image.asset('assets/images/bazarlogo.png',),
                   Text(
                     "Find your Shop.",
-                    style: AppTextStyle.minimalTexts
+                    style: AppTextStyle.landingTexts
                   ),
                   
                 
