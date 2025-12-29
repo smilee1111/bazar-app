@@ -84,6 +84,8 @@ dependencies:
   dartz: ^0.10.1
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.10.0
+
   flutter_test:
     sdk: flutter
 
@@ -93,6 +95,13 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
+
+
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/bazarlogo.png"
 
   # Code Generation
   build_runner: ^2.4.13

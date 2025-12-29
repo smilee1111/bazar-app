@@ -99,10 +99,11 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                 SizedBox(height: 15),
                 TextFormField(
                   controller: passwordController,
-                  keyboardType: TextInputType.visiblePassword,
+                  obscureText: true,
                   decoration: InputDecoration(
                     labelText: "Password",
                     hintText: "password must have special characters",
+                    suffixIcon: Icon(Icons.visibility),
                   ),
                   validator: (value){
                     if(value==null || value.isEmpty){
@@ -114,10 +115,11 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                 SizedBox(height: 15),
                 TextFormField(
                 controller: confirmPasswordController,
-                keyboardType: TextInputType.visiblePassword,
+                obscureText: true,
                 decoration: InputDecoration(
                   labelText: "Confirm Password",
                   hintText: "password must have special characters",
+                  suffixIcon: Icon(Icons.visibility),
                 ),
                 validator: (value){
                   if(value==null || value.isEmpty){

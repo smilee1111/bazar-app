@@ -38,6 +38,13 @@ class AppTextStyle {
     color: darkTextColor,
   );
 
+  static const TextStyle bottomnav = TextStyle(
+    fontFamily: fontFamily,
+    fontSize: 10,
+    fontWeight: FontWeight.w600,
+    color: lightTextColor,
+  );
+
   static const TextStyle landingTexts = TextStyle(
     fontFamily: fontFamily,
     fontSize: 20,

@@ -8,7 +8,9 @@ ThemeData getApplicationTheme(){
     colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
     fontFamily: 'Poppins Regular',
     scaffoldBackgroundColor: AppColors.background,
-    
+    splashColor: Colors.white.withOpacity(0.08),
+    highlightColor: Colors.white.withOpacity(0.03),
+    hoverColor: Colors.transparent,
     appBarTheme: AppBarTheme(
       backgroundColor: AppColors.background,
       titleTextStyle: TextStyle(
@@ -38,13 +40,17 @@ ThemeData getApplicationTheme(){
     
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: Color(0xFF524632),
-      selectedItemColor: Colors.white,
+      unselectedIconTheme: IconThemeData(color: Colors.white),
+      selectedItemColor: Color(0xFFA48256),
+      unselectedItemColor: Colors.white,
       type: BottomNavigationBarType.fixed,
+      selectedLabelStyle: AppTextStyle.bottomnav,
+      unselectedLabelStyle: AppTextStyle.bottomnav,
     ),
-
     inputDecorationTheme: InputDecorationTheme(
     filled: true,
     fillColor: Colors.white,
+    
     contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
     labelStyle: AppTextStyle.minimalTexts.copyWith(color: AppColors.textPrimary),
     hintStyle: AppTextStyle.minimalTexts.copyWith(color: Colors.grey),
