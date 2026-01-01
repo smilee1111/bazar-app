@@ -1,4 +1,4 @@
-import 'package:bazar/app.dart';
+import 'package:bazar/app/app.dart';
 import 'package:flutter/material.dart';
 
 void main(){

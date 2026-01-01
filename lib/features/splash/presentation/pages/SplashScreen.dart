@@ -1,5 +1,5 @@
-import 'package:bazar/theme/colors.dart';
-import 'package:bazar/theme/textstyle.dart';
+import 'package:bazar/app/theme/colors.dart';
+import 'package:bazar/app/theme/textstyle.dart';
 import 'package:flutter/material.dart';
 
 class Splashscreen extends StatefulWidget {

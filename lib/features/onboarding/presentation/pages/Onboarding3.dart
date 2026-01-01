@@ -1,16 +1,16 @@
-import 'package:bazar/theme/colors.dart';
-import 'package:bazar/theme/textstyle.dart';
+import 'package:bazar/app/theme/colors.dart';
+import 'package:bazar/app/theme/textstyle.dart';
 import 'package:flutter/material.dart';
 
-class Onboardingscreen extends StatelessWidget {
-  const Onboardingscreen({super.key});
-
+class Onboarding3 extends StatelessWidget {
+  const Onboarding3({super.key});
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         body:  GestureDetector(
-           onTap: () {
-            Navigator.pushNamed(context, '/onboarding2');  
+          onTap: () {
+            Navigator.pushNamed(context, '/DashboardScreen');
           },
           child: Padding(
             padding: const EdgeInsets.all(30),
@@ -55,12 +55,37 @@ class Onboardingscreen extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10)
                             ),
                             child: 
-                            Padding(padding: EdgeInsets.all(15.0 ),
-                            child: Text('📍 Shops near you ',
-                            style: AppTextStyle.landingTexts,
-                            ),
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Text('📍 Shops near you ',
+                                  style: AppTextStyle.landingTexts,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Text('📝 Leave your reviews ',
+                                  style: AppTextStyle.landingTexts,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(15.0),
+                                  child: Text('🔎 Search for the perfect shop to buy anything ',
+                                  style: AppTextStyle.landingTexts,
+                                  ),
+                                ),
+                               
+                              ],
+                              )
+                          
                           ),
-                          ),
+                        ),
+                        SizedBox(height: 10),
+                        Image.asset('assets/images/image2.png',
+                        height: 150,
                         ),
                       ],
                     )

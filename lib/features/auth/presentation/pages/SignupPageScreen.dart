@@ -1,5 +1,5 @@
-import 'package:bazar/theme/colors.dart';
-import 'package:bazar/theme/textstyle.dart';
+import 'package:bazar/app/theme/colors.dart';
+import 'package:bazar/app/theme/textstyle.dart';
 import 'package:flutter/material.dart';
 
 class Signuppagescreen extends StatefulWidget {
@@ -16,6 +16,7 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+  String? selectedRole;
   final _formKey = GlobalKey<FormState>();
 
  
@@ -95,6 +96,36 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                     }
                     return null;
                     },
+                ),
+                SizedBox(height: 15),
+                DropdownButtonFormField<String>(
+                  value: selectedRole,
+                  decoration: InputDecoration(
+                    labelText: 'Role',
+                    hintText: 'Choose your role',
+                    prefixIcon: Icon(Icons.person_outline),
+                  ),
+                  items: const [
+                    DropdownMenuItem<String>(
+                      value: 'seller',
+                      child: Text('Seller'),
+                    ),
+                    DropdownMenuItem<String>(
+                      value: 'user',
+                      child: Text('User'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      selectedRole = value;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please select your role.';
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(height: 15),
                 TextFormField(

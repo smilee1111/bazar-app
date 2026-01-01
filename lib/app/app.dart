@@ -1,13 +1,13 @@
-import 'package:bazar/app.dart';
-import 'package:bazar/screens/DashboardScreen.dart';
-import 'package:bazar/screens/LandingPageScreen.dart';
-import 'package:bazar/screens/LoginPageScreen.dart';
-import 'package:bazar/screens/Onboarding2.dart';
-import 'package:bazar/screens/Onboarding3.dart';
-import 'package:bazar/screens/OnboardingScreen.dart';
-import 'package:bazar/screens/SignupPageScreen.dart';
-import 'package:bazar/screens/SplashScreen.dart';
-import 'package:bazar/theme/theme_data.dart';
+import 'package:bazar/app/app.dart';
+import 'package:bazar/features/dashboard/presentation/pages/DashboardScreen.dart';
+import 'package:bazar/features/splash/presentation/pages/LandingPageScreen.dart';
+import 'package:bazar/features/auth/presentation/pages/LoginPageScreen.dart';
+import 'package:bazar/features/onboarding/presentation/pages/Onboarding2.dart';
+import 'package:bazar/features/onboarding/presentation/pages/Onboarding3.dart';
+import 'package:bazar/features/onboarding/presentation/pages/OnboardingScreen.dart';
+import 'package:bazar/features/auth/presentation/pages/SignupPageScreen.dart';
+import 'package:bazar/features/splash/presentation/pages/SplashScreen.dart';
+import 'package:bazar/app/theme/theme_data.dart';
 import 'package:flutter/material.dart';
 
 class App extends StatelessWidget {

@@ -1,4 +1,4 @@
-import 'package:bazar/theme/colors.dart';
+import 'package:bazar/app/theme/colors.dart';
 import 'package:flutter/material.dart';
 
 class LandingPageScreen extends StatelessWidget {

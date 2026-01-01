@@ -1,4 +1,4 @@
-import 'package:bazar/theme/textstyle.dart';
+import 'package:bazar/app/theme/textstyle.dart';
 import 'package:flutter/material.dart';
 
 class Homescreen extends StatelessWidget {

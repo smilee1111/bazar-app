@@ -1,9 +1,9 @@
 import 'package:bazar/screens/FavouriteScreen.dart';
-import 'package:bazar/screens/HomeScreen.dart';
+import 'package:bazar/features/dashboard/presentation/pages/HomeScreen.dart';
 import 'package:bazar/screens/ProfileScreen.dart';
 import 'package:bazar/screens/SavedScreen.dart';
-import 'package:bazar/theme/colors.dart';
-import 'package:bazar/theme/textstyle.dart';
+import 'package:bazar/app/theme/colors.dart';
+import 'package:bazar/app/theme/textstyle.dart';
 import 'package:flutter/material.dart';
 
 class Dashboardscreen extends StatefulWidget {
@@ -16,7 +16,7 @@ class Dashboardscreen extends StatefulWidget {
 class _DashboardscreenState extends State<Dashboardscreen> {
   int _selectedIndex=0;
 
-  List<Widget> lstBottomScreen =[
+  List<Widget> lstBottomScreen =[ 
   const Homescreen(),
   const Savedscreen(),
   const Favouritescreen(),
