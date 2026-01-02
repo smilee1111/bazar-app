@@ -1,3 +1,4 @@
+import 'package:bazar/features/role/domain/entities/role_entity.dart';
 import 'package:equatable/equatable.dart';
 
 class AuthEntity extends Equatable{
@@ -7,6 +8,7 @@ class AuthEntity extends Equatable{
   final String username;
   final String? password;
   final String? roleId;
+  final RoleEntity? role; 
 
   //constructor
   const AuthEntity({
@@ -16,6 +18,7 @@ class AuthEntity extends Equatable{
     required this.username,
     this.password,
     this.roleId,
+    this.role,
   });
   
   @override
@@ -26,6 +29,7 @@ class AuthEntity extends Equatable{
     username,
     password,
     roleId,
+    role,
   ];
 
 

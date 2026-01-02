@@ -160,8 +160,8 @@ class _SignuppagescreenState extends ConsumerState<Signuppagescreen> {
                     color: AppColors.textPrimary,
                   ),
                   decoration: InputDecoration(
-                    labelText: 'Role',
-                    hintText: roleState.status ==RoleStatus.loading
+                  labelText: 'Role',
+                  hintText: roleState.status ==RoleStatus.loading
                       ? 'Loading roles...'
                       : 'Select your role',
                     prefixIcon: Icon(Icons.person_outline),
