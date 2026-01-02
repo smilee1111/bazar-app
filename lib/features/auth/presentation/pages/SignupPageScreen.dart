@@ -1,28 +1,76 @@
 import 'package:bazar/app/theme/colors.dart';
 import 'package:bazar/app/theme/textstyle.dart';
+import 'package:bazar/features/role/presentation/state/role_state.dart';
+import 'package:bazar/features/role/presentation/view_model/role_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Signuppagescreen extends StatefulWidget {
+class Signuppagescreen extends ConsumerStatefulWidget {
   const Signuppagescreen({super.key});
 
 
   @override
-  State<Signuppagescreen> createState() => _SignuppagescreenState();
+  ConsumerState<Signuppagescreen> createState() => _SignuppagescreenState();
 }
 
-class _SignuppagescreenState extends State<Signuppagescreen> {
-  final TextEditingController fullnameController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-  String? selectedRole;
+class _SignuppagescreenState extends ConsumerState<Signuppagescreen> {
+  final TextEditingController _fullnameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+
+
+  bool _obscurePassword = true;
+  bool _obscureConfirmPassword = true;
+  String? _selectedRole;
   final _formKey = GlobalKey<FormState>();
 
- 
+  @override
+  void dispose() {
+    _fullnameController.dispose();
+    _emailController.dispose();
+    _usernameController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+
+    @override
+  void initState() {
+    super.initState();
+    Future.microtask(() {
+      // Call load batches when the widget is built
+      ref.read(roleViewModelProvider.notifier).getAllRoles();
+    });
+  }
+
+   Future<void> _handleSignup() async {
+    if (_formKey.currentState!.validate()) {
+    //   await ref
+    //   // .read(authViewModelProvider.notifier)
+    //   // .register(
+    //   //   fullName: _fullnameController.text.trim(),
+    //   //   email: _emailController.text.trim(),
+    //   //   username: _emailController.text.trim().split('@').first,
+    //   //   password: _passwordController.text,
+    //   //   roleId: _selectedRole,
+    //   // );
+    }
+   }
+
+
+
   @override
   Widget build(BuildContext context) {
-    
+
+    //provider watch 
+    final roleState = ref.watch(roleViewModelProvider);
+
+
+    //listen to the state changes
+
     return Scaffold(
       body: 
       Form(
@@ -54,37 +102,45 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                   style: AppTextStyle.minimalTexts,),
                   SizedBox(height: 30),
                   TextFormField(
-                  controller: fullnameController,
+                  controller: _fullnameController,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     labelText: "Full Name",
                     hintText: "e.g: Ram kc",
                   ),
-                  validator: (value){
-                    if(value==null || value.isEmpty){
-                      return "Please enter your full name.";
-                    }
-                    return null;
+                 validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your name';
+                      }
+                      if (value.length < 3) {
+                        return 'Name must be at least 3 characters';
+                      }
+                      return null;
                     },
-                ),
+                  ),
                 SizedBox(height: 15),
                 TextFormField(
-                  controller: emailController,
+                  controller: _emailController,
                   keyboardType: TextInputType.emailAddress,
                   decoration: InputDecoration(
                     labelText: "Email Address",
                     hintText: "e.g: example.com",
                   ),
-                  validator: (value){
-                    if(value==null || value.isEmpty){
-                      return "Please enter your email address.";
-                    }
-                    return null;
+                  validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      }
+                      if (!RegExp(
+                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                      ).hasMatch(value)) {
+                        return 'Please enter a valid email';
+                      }
+                      return null;
                     },
-                ),
+                  ),
                 SizedBox(height: 15),
                 TextFormField(
-                  controller: usernameController,
+                  controller: _usernameController,
                   keyboardType: TextInputType.text,
                   decoration: InputDecoration(
                     labelText: "Username",
@@ -99,25 +155,31 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                 ),
                 SizedBox(height: 15),
                 DropdownButtonFormField<String>(
-                  value: selectedRole,
+                  initialValue: _selectedRole,
+                  style: AppTextStyle.minimalTexts.copyWith(
+                    color: AppColors.textPrimary,
+                  ),
                   decoration: InputDecoration(
                     labelText: 'Role',
-                    hintText: 'Choose your role',
+                    hintText: roleState.status ==RoleStatus.loading
+                      ? 'Loading roles...'
+                      : 'Select your role',
                     prefixIcon: Icon(Icons.person_outline),
                   ),
-                  items: const [
-                    DropdownMenuItem<String>(
-                      value: 'seller',
-                      child: Text('Seller'),
+                  items: roleState.roles.map((role){
+                    return DropdownMenuItem<String>(
+                    value: role.roleId,
+                    child: Text(
+                      role.roleName,
+                      style: AppTextStyle.minimalTexts.copyWith(
+                        color: AppColors.textPrimary,
+                      ),
                     ),
-                    DropdownMenuItem<String>(
-                      value: 'user',
-                      child: Text('User'),
-                    ),
-                  ],
+                    );
+                  }).toList(),
                   onChanged: (value) {
                     setState(() {
-                      selectedRole = value;
+                      _selectedRole = value;
                     });
                   },
                   validator: (value) {
@@ -129,45 +191,71 @@ class _SignuppagescreenState extends State<Signuppagescreen> {
                 ),
                 SizedBox(height: 15),
                 TextFormField(
-                  controller: passwordController,
-                  obscureText: true,
+                  controller: _passwordController,
+                  obscureText: _obscurePassword,
                   decoration: InputDecoration(
-                    labelText: "Password",
-                    hintText: "password must have special characters",
-                    suffixIcon: Icon(Icons.visibility),
-                  ),
-                  validator: (value){
-                    if(value==null || value.isEmpty){
-                      return "Please enter your password.";
-                    }
-                    return null;
+                  labelText: "Password",
+                  hintText: "password must have special characters",
+                  prefixIcon: Icon(Icons.lock_outline_rounded),
+                  suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscurePassword
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscurePassword = !_obscurePassword;
+                          });
+                        },
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter a password';
+                      }
+                      if (value.length < 6) {
+                        return 'Password must be at least 6 characters';
+                      }
+                      return null;
                     },
-                ),
+                  ),
                 SizedBox(height: 15),
                 TextFormField(
-                controller: confirmPasswordController,
-                obscureText: true,
-                decoration: InputDecoration(
-                  labelText: "Confirm Password",
-                  hintText: "password must have special characters",
-                  suffixIcon: Icon(Icons.visibility),
-                ),
-                validator: (value){
-                  if(value==null || value.isEmpty){
-                    return "Please enter your password.";
-                  }
-                  return null;
-                  },
-                ),
+                  controller: _confirmPasswordController,
+                  obscureText: _obscureConfirmPassword,
+                  decoration: InputDecoration(
+                  labelText: 'Confirm Password',
+                  hintText: 'Re-enter your password',
+                  prefixIcon: Icon(Icons.lock_outline_rounded),
+                  suffixIcon: IconButton(
+                        icon: Icon(
+                          _obscureConfirmPassword
+                              ? Icons.visibility_outlined
+                              : Icons.visibility_off_outlined,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _obscureConfirmPassword = !_obscureConfirmPassword;
+                          });
+                        },
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please confirm your password';
+                      }
+                      if (value != _passwordController.text) {
+                        return 'Passwords do not match';
+                      }
+                      return null;
+                    },
+                  ),
                 SizedBox(height: 15,),
                 SizedBox(
                   width: 150,
                   child: ElevatedButton(
-                    onPressed: () {
-                       if(_formKey.currentState!.validate()){
-                        Navigator.pushNamed(context, '/OnboardingScreen');
-                       }
-                    },
+                    onPressed: _handleSignup,
                     child: Text("SIGN UP"),
                   ),
                 ),

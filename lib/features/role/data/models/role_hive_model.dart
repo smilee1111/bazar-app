@@ -14,15 +14,20 @@ class RoleHiveModel extends HiveObject {
   @HiveField(1)
   final String roleName;
 
+  @HiveField(2)
+  final String? status;
+  
   RoleHiveModel({
     String? roleId,
-    required this.roleName,
-  }) : roleId = roleId ?? Uuid().v4();
+    required this.roleName,String? status
+  }) : roleId = roleId ?? Uuid().v4(),
+    status = status ?? 'active';
+  
 
   
   // TOENtity
   RoleEntity toEntity() {
-    return RoleEntity(roleId: roleId, roleName: roleName);
+    return RoleEntity(roleId: roleId, roleName: roleName, status: status);
   }
 
   // From Entity -> conversion

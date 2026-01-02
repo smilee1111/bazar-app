@@ -10,7 +10,7 @@ final getAllRoleUseCaseProvider = Provider<GetAllRoleUsecase>((ref){
   return GetAllRoleUsecase(roleRepository: ref.read(roleRepositoryProvider));
 });
 
-class GetAllRoleUsecase  implements UseCaseWithoutParams<List<RoleEntity>>{
+class GetAllRoleUsecase  implements UsecaseWithoutParams<List<RoleEntity>>{
   final IroleRepository _roleRepository;
 
   GetAllRoleUsecase({required IroleRepository roleRepository})

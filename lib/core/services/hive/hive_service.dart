@@ -22,12 +22,9 @@ class HiveService {
     await insertDummyRoles();
   }
 
-
-
   Future<void> insertDummyRoles() async{
-    final box= await Hive.openBox<RoleHiveModel>(
-      HiveTableConstant.roleTable,
-    );
+    // Use the already-opened box instead of opening it again
+    final box = _roleBox;
     if(box.isNotEmpty) return;
 
     final dummyRoles = [
@@ -37,7 +34,7 @@ class HiveService {
     for(var role in dummyRoles){
       await box.put(role.roleId,role);
     }
-    await box.close();
+    // Don't close the box here - it's used throughout the app
   }
 
    //Register all type adapters 

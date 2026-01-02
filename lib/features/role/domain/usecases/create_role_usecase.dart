@@ -7,31 +7,34 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CreateRoleUsecaseParams extends Equatable{
+class CreateRoleParams extends Equatable {
   final String roleName;
 
-  CreateRoleUsecaseParams({required this.roleName});
-  
+  const CreateRoleParams({required this.roleName});
+
   @override
   List<Object?> get props => [roleName];
-
-  
 }
 
-final createRoleUseCaseProvider = Provider<CreateRoleUsecase>((ref){
-  return CreateRoleUsecase(roleRepository: ref.read(roleRepositoryProvider));
+//Usecase
+
+// Create Provider
+final createRoleUsecaseProvider = Provider<CreateRoleUsecase>((ref) {
+  final roleRepository = ref.read(roleRepositoryProvider);
+  return CreateRoleUsecase(roleRepository: roleRepository);
 });
 
-class CreateRoleUsecase 
-implements UseCaseWithParams<bool, CreateRoleUsecaseParams>{
-final IroleRepository _roleRepository;
+class CreateRoleUsecase implements UsecaseWithParams<bool, CreateRoleParams> {
+  final IroleRepository _roleRepository;
 
-CreateRoleUsecase({required IroleRepository roleRepository}) : _roleRepository = roleRepository;
+  CreateRoleUsecase({required IroleRepository roleRepository})
+    : _roleRepository = roleRepository;
+
   @override
-  Future<Either<Failure, bool>> call(CreateRoleUsecaseParams params) {
-    //create role entity here
+  Future<Either<Failure, bool>> call(CreateRoleParams params) {
+    // object creation
     RoleEntity roleEntity = RoleEntity(roleName: params.roleName);
-    return _roleRepository.createRole(roleEntity  );
-  }
 
+    return _roleRepository.createRole(roleEntity);
+  }
 }

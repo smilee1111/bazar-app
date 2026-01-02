@@ -7,17 +7,19 @@ import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class UpdateRoleUsecaseParams extends Equatable{
+class UpdateRoleParams extends Equatable{
   final String roleId;
   final String roleName;
+  final String? status;
 
-  const UpdateRoleUsecaseParams({
+  const UpdateRoleParams({
     required this.roleId,
     required this.roleName,
+    this.status,
   });
   
   @override
-  List<Object?> get props => [roleId,roleName];
+  List<Object?> get props => [roleId,roleName,status];
 }
 
 
@@ -26,17 +28,18 @@ final updateRoleUseCaseProvider = Provider<UpdateRoleUsecase>((ref){
 });
 
 class UpdateRoleUsecase 
-implements UseCaseWithParams<bool, UpdateRoleUsecaseParams>{
+implements UsecaseWithParams<bool, UpdateRoleParams>{
   final IroleRepository _roleRepository;
 
   UpdateRoleUsecase({required IroleRepository roleRepository})
     : _roleRepository = roleRepository;
   
   @override
-  Future<Either<Failure, bool>> call(UpdateRoleUsecaseParams params) {
+  Future<Either<Failure, bool>> call(UpdateRoleParams params) {
    RoleEntity roleEntity = RoleEntity(
     roleId: params.roleId,
     roleName: params.roleName,
+    status: params.status,
     );
 
     return _roleRepository.updateRole(roleEntity);
