@@ -35,42 +35,68 @@ class AuthLocalDatasource implements IAuthDataSource{
   Future<AuthHiveModel> register(AuthHiveModel user) async {
     return await _hiveService.register(user);
   }
-
   @override
-  Future<bool> updateUser(AuthHiveModel user) {
-    // TODO: implement updateUser
-    throw UnimplementedError();
+  Future<bool> updateUser(AuthHiveModel user) async {
+    try {
+      return await _hiveService.updateUser(user);
+    } catch (e) {
+      return false;
+    }
   }
   @override
-  Future<bool> deleteUser(String authId) {
-    // TODO: implement deleteUser
-    throw UnimplementedError();
+ @override
+  Future<bool> deleteUser(String authId) async {
+    try {
+      await _hiveService.deleteUser(authId);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+Future<AuthHiveModel?> getCurrentUser() async {
+    try {
+      // // Check if user is logged in
+      // if (!_userSessionService.isLoggedIn()) {
+      //   return null;
+      // }
+
+      // // Get user ID from session
+      // final userId = _userSessionService.getCurrentUserId();
+      // if (userId == null) {
+      //   return null;
+      // }
+
+      // Fetch user from Hive database
+      // return _hiveService.getUserById(userId);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
-  Future<AuthHiveModel?> getCurrentUser() {
-    // TODO: implement getCurrentUser
-    throw UnimplementedError();
+  Future<AuthHiveModel?> getUserByEmail(String email) async {
+    try {
+      return _hiveService.getUserByEmail(email);
+    } catch (e) {
+      return null;
+    }
   }
 
   @override
-  Future<AuthHiveModel?> getUserByEmail(String email) {
-    // TODO: implement getUserByEmail
-    throw UnimplementedError();
+  Future<AuthHiveModel?> getUserById(String authId) async {
+    return await _hiveService.getUserById(authId);
   }
 
+  
   @override
-  Future<AuthHiveModel?> getUserById(String authId) {
-    // TODO: implement getUserById
-    throw UnimplementedError();
+  Future<bool> logOut() async{
+      try {
+      await _hiveService.logOut();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
-
-  @override
-  Future<bool> logOut() {
-    // TODO: implement logOut
-    throw UnimplementedError();
-  }
-
 
 
 }

@@ -1,5 +1,7 @@
+import 'package:bazar/app/routes/app_routes.dart';
 import 'package:bazar/app/theme/colors.dart';
 import 'package:bazar/app/theme/textstyle.dart';
+import 'package:bazar/features/onboarding/presentation/pages/Onboarding3.dart';
 import 'package:flutter/material.dart';
 
 class Onboarding2 extends StatelessWidget {
@@ -10,7 +12,7 @@ class Onboarding2 extends StatelessWidget {
     return Scaffold(
         body:  GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, '/onboarding3');  
+            AppRoutes.push(context, const Onboarding3());
           },
           child: Padding(
             padding: const EdgeInsets.all(30),

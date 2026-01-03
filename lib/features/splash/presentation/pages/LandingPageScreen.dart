@@ -1,4 +1,6 @@
+import 'package:bazar/app/routes/app_routes.dart';
 import 'package:bazar/app/theme/colors.dart';
+import 'package:bazar/features/auth/presentation/pages/SignupPageScreen.dart';
 import 'package:flutter/material.dart';
 
 class LandingPageScreen extends StatelessWidget {
@@ -47,7 +49,7 @@ class LandingPageScreen extends StatelessWidget {
                     width: 150,
                     child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, '/RegisterScreen');
+                      AppRoutes.push(context, const Signuppagescreen());
                     },
                     style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(vertical: 7,horizontal: 10),

@@ -1,5 +1,7 @@
+import 'package:bazar/app/routes/app_routes.dart';
 import 'package:bazar/app/theme/colors.dart';
 import 'package:bazar/app/theme/textstyle.dart';
+import 'package:bazar/features/splash/presentation/pages/LandingPageScreen.dart';
 import 'package:flutter/material.dart';
 
 class Splashscreen extends StatefulWidget {
@@ -16,7 +18,7 @@ class _SplashscreenState extends State<Splashscreen> {
 
     // Navigate after 3 seconds
     Future.delayed(const Duration(seconds: 3), () {
-      Navigator.pushReplacementNamed(context, '/LandingScreen');
+      AppRoutes.pushReplacement(context, const LandingPageScreen());
     });
   }
 

@@ -1,5 +1,7 @@
+import 'package:bazar/app/routes/app_routes.dart';
 import 'package:bazar/app/theme/colors.dart';
 import 'package:bazar/app/theme/textstyle.dart';
+import 'package:bazar/features/dashboard/presentation/pages/DashboardScreen.dart';
 import 'package:flutter/material.dart';
 
 class Onboarding3 extends StatelessWidget {
@@ -10,7 +12,7 @@ class Onboarding3 extends StatelessWidget {
     return Scaffold(
         body:  GestureDetector(
           onTap: () {
-            Navigator.pushNamed(context, '/DashboardScreen');
+            AppRoutes.pushAndRemoveUntil(context, const Dashboardscreen());
           },
           child: Padding(
             padding: const EdgeInsets.all(30),

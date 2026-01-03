@@ -53,7 +53,7 @@ class HiveService {
 //OPEN BOXES
   Future<void> _openBoxes() async {
     await Hive.openBox<RoleHiveModel>(HiveTableConstant.roleTable);
-    await Hive.openBox<RoleHiveModel>(HiveTableConstant.userTable);
+    await Hive.openBox<AuthHiveModel>(HiveTableConstant.userTable);
 
   }
 
@@ -145,6 +145,28 @@ Box<AuthHiveModel> get _authBox =>
   // Delete user
   Future<void> deleteUser(String authId) async {
     await _authBox.delete(authId);
+  }
+
+  // Get current user (last logged in)
+  Future<AuthHiveModel?> getCurrentUser() async {
+    try {
+      if (_authBox.isEmpty) {
+        return null;
+      }
+      return _authBox.values.isNotEmpty ? _authBox.values.first : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Logout
+  Future<bool> logOut() async {
+    try {
+      await _authBox.clear();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
 }

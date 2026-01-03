@@ -23,9 +23,19 @@ class AuthRepository implements IAuthRepository{
 
 
   @override
-  Future<Either<Failure, AuthEntity>> getCurrentUser() {
-    // TODO: implement getCurrentUser
-    throw UnimplementedError();
+  Future<Either<Failure, AuthEntity>> getCurrentUser() async {
+    try {
+      final user = await _authDataSource.getCurrentUser();
+      if (user != null) {
+        final entity = user.toEntity();
+        return Right(entity);
+      }
+      return const Left(
+        LocalDatabaseFailure(message: "No user found"),
+      );
+    } catch (e) {
+      return Left(LocalDatabaseFailure(message: e.toString()));
+    }
   }
 
   @override
@@ -45,9 +55,13 @@ class AuthRepository implements IAuthRepository{
   }
 
   @override
-  Future<Either<Failure, bool>> logout() {
-    // TODO: implement logout
-    throw UnimplementedError();
+  Future<Either<Failure, bool>> logout() async {
+    try {
+      final result = await _authDataSource.logOut();
+      return Right(result);
+    } catch (e) {
+      return Left(LocalDatabaseFailure(message: e.toString()));
+    }
   }
 
   @override

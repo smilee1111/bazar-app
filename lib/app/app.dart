@@ -9,26 +9,16 @@ import 'package:bazar/features/auth/presentation/pages/SignupPageScreen.dart';
 import 'package:bazar/features/splash/presentation/pages/SplashScreen.dart';
 import 'package:bazar/app/theme/theme_data.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class App extends StatelessWidget {
+class App extends ConsumerWidget {
   const App({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,WidgetRef ref) {
     return MaterialApp(
       theme: getApplicationTheme(),
-      initialRoute: '/SplashScreen',
-      routes:{
-        '/SplashScreen': (context) => const Splashscreen(),
-        '/LandingScreen':(context)=> const LandingPageScreen(),
-        '/LoginScreen':(context)=>const Loginpagescreen(),
-        '/RegisterScreen':(context)=>const Signuppagescreen(),
-        '/DashboardScreen':(context)=>const Dashboardscreen(),
-        '/OnboardingScreen':(context)=>const Onboardingscreen(),
-        '/onboarding2':(context)=>const Onboarding2(),
-        '/onboarding3':(context)=>const Onboarding3(),
-
-      }
+      home: const Splashscreen(),
     );
   }
 }

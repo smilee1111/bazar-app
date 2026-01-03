@@ -1,5 +1,10 @@
+import 'package:bazar/app/routes/app_routes.dart';
 import 'package:bazar/app/theme/colors.dart';
 import 'package:bazar/app/theme/textstyle.dart';
+import 'package:bazar/core/utils/snackbar_utils.dart';
+import 'package:bazar/features/auth/presentation/pages/LoginPageScreen.dart';
+import 'package:bazar/features/auth/presentation/state/auth_state.dart';
+import 'package:bazar/features/auth/presentation/view_model/auth_viewmodel.dart';
 import 'package:bazar/features/role/presentation/state/role_state.dart';
 import 'package:bazar/features/role/presentation/view_model/role_view_model.dart';
 import 'package:flutter/material.dart';
@@ -48,28 +53,46 @@ class _SignuppagescreenState extends ConsumerState<Signuppagescreen> {
 
    Future<void> _handleSignup() async {
     if (_formKey.currentState!.validate()) {
-    //   await ref
-    //   // .read(authViewModelProvider.notifier)
-    //   // .register(
-    //   //   fullName: _fullnameController.text.trim(),
-    //   //   email: _emailController.text.trim(),
-    //   //   username: _emailController.text.trim().split('@').first,
-    //   //   password: _passwordController.text,
-    //   //   roleId: _selectedRole,
-    //   // );
+      await ref
+      .read(authViewModelProvider.notifier)
+      .register(
+        fullName: _fullnameController.text.trim(),
+        email: _emailController.text.trim(),
+        username: _emailController.text.trim().split('@').first,
+        password: _passwordController.text,
+        roleId: _selectedRole,
+      );
     }
    }
 
+   void _navigateToLogin() {
+    AppRoutes.pushReplacement(context, const Loginpagescreen());
+  }
 
 
+     void _handleGoogleSignUp() {
+    // TODO: Implement Google Sign In
+    SnackbarUtils.showInfo(context, 'Google Sign Up coming soon');
+  }
   @override
   Widget build(BuildContext context) {
 
     //provider watch 
     final roleState = ref.watch(roleViewModelProvider);
+    final authState = ref.watch(authViewModelProvider);
 
-
-    //listen to the state changes
+     // Listen to auth state changes
+    ref.listen<AuthState>(authViewModelProvider, (previous, next) {
+      if (next.status == AuthStatus.registered) {
+        SnackbarUtils.showSuccess(
+          context,
+          'Registration successful! Please login.',
+        );
+        AppRoutes.pushReplacement(context, const Loginpagescreen());
+      } else if (next.status == AuthStatus.error && next.errorMessage != null) {
+        SnackbarUtils.showError(context, next.errorMessage!);
+      }
+    });
 
     return Scaffold(
       body: 
@@ -255,14 +278,21 @@ class _SignuppagescreenState extends ConsumerState<Signuppagescreen> {
                 SizedBox(
                   width: 150,
                   child: ElevatedButton(
-                    onPressed: _handleSignup,
-                    child: Text("SIGN UP"),
+                    onPressed: authState.status == AuthStatus.loading ? null : _handleSignup,
+                    child: authState.status == AuthStatus.loading
+                        ? SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Text("SIGN UP"),
+                    
                   ),
                 ),
-                TextButton(onPressed: () {
-                    Navigator.pushNamed(context, '/LoginScreen');
-                  
-                }, child: Text("Already have an account? Sign In",
+                TextButton(onPressed: _navigateToLogin,
+                child: Text("Already have an account? Sign In",
                 style: AppTextStyle.minimalTexts.copyWith(
                 decoration: TextDecoration.underline,))),
                 Container(
@@ -280,8 +310,12 @@ class _SignuppagescreenState extends ConsumerState<Signuppagescreen> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text('Continue with Google', 
-                          style: AppTextStyle.minimalTexts,),
+                          TextButton(
+                            onPressed: _handleGoogleSignUp,
+                            child: Text('Continue with Google', 
+                              style: AppTextStyle.minimalTexts,
+                            ),
+                          ),
                           SizedBox(width: 10),
                           Image.asset('assets/icons/googlelogo.png',
                           width: 30,

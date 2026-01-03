@@ -1,21 +1,70 @@
+import 'package:bazar/app/routes/app_routes.dart';
 import 'package:bazar/app/theme/colors.dart';
 import 'package:bazar/app/theme/textstyle.dart';
+import 'package:bazar/core/utils/snackbar_utils.dart';
+import 'package:bazar/features/auth/presentation/pages/SignupPageScreen.dart';
+import 'package:bazar/features/auth/presentation/state/auth_state.dart';
+import 'package:bazar/features/auth/presentation/view_model/auth_viewmodel.dart';
+import 'package:bazar/features/dashboard/presentation/pages/DashboardScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Loginpagescreen extends StatefulWidget {
+class Loginpagescreen extends ConsumerStatefulWidget {
   const Loginpagescreen({super.key});
 
   @override
-  State<Loginpagescreen> createState() => _LoginpagescreenState();
+  ConsumerState<Loginpagescreen> createState() => _LoginpagescreenState();
 }
 
-class _LoginpagescreenState extends State<Loginpagescreen> {
-  final TextEditingController usernameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+class _LoginpagescreenState extends ConsumerState<Loginpagescreen> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  bool _obscurePassword = true;
   final _formKey = GlobalKey<FormState>();
-  @override
+
+
+   @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+    void _navigateToSignup() {
+    AppRoutes.push(context, const Signuppagescreen());
+  }
+
+  
+  Future<void> _handleLogin() async {
+    if (_formKey.currentState!.validate()) {
+      await ref
+          .read(authViewModelProvider.notifier)
+          .login(
+            email: _emailController.text.trim(),
+            password: _passwordController.text,
+          );
+    }
+  }
+
+   void _handleGoogleSignIn() {
+    // TODO: Implement Google Sign In
+    SnackbarUtils.showInfo(context, 'Google Sign In coming soon');
+  }
+  @override     
   Widget build(BuildContext context) {
-return Scaffold(
+  final authState = ref.watch(authViewModelProvider);
+
+
+  
+    // Listen to auth state changes
+    ref.listen<AuthState>(authViewModelProvider, (previous, next) {
+      if (next.status == AuthStatus.authenticated) {
+        AppRoutes.pushReplacement(context, const Dashboardscreen());
+      } else if (next.status == AuthStatus.error && next.errorMessage != null) {
+        SnackbarUtils.showError(context, next.errorMessage!);
+      }
+    });
+  return Scaffold(
   body: SafeArea(
     child: SingleChildScrollView(
       padding: const EdgeInsets.all(30),
@@ -48,65 +97,81 @@ return Scaffold(
             const SizedBox(height: 55),
             // USERNAME
             TextFormField(
-              controller: usernameController,
-              keyboardType: TextInputType.text,
+              controller: _emailController,
+              keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
                 labelText: "USERNAME",
                 hintText: "e.g: John Doe",
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Please enter your full name.";
-                }
-                return null;
-              },
-            ),
+               validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your email';
+                    }
+                    if (!value.contains('@')) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
+                ),
 
             const SizedBox(height: 20),
 
             // PASSWORD
             TextFormField(
-              controller: passwordController,
-              obscureText: true,
+              controller: _passwordController,
+              obscureText: _obscurePassword,
               decoration: InputDecoration(
                 labelText: "PASSWORD",
-                suffixIcon: Icon(Icons.visibility),
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return "Please enter your password.";
-                }
-                return null;
-              },
-            ),
-
-            TextButton(
-              onPressed: () {},
-              child: Text(
-                "Forgot Password?",
-                style: AppTextStyle.minimalTexts.copyWith(
-                  decoration: TextDecoration.underline,
+               hintText: 'Enter your password',
+                    prefixIcon: Icon(Icons.lock_outline),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility_outlined
+                            : Icons.visibility_off_outlined,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _obscurePassword = !_obscurePassword;
+                        });
+                      },
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    if (value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
                 ),
-              ),
-            ),
-
+                SizedBox(height: 15,),
             SizedBox(
               width: 150,
               child: ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    Navigator.pushNamed(context, '/DashboardScreen');
-                  }
-                },
-                child: Text(
+              onPressed: authState.status == AuthStatus.loading
+                        ? null
+                        : _handleLogin,
+                 child: authState.status == AuthStatus.loading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
+                            ),
+                          )
+                  : Text(
                   "LOGIN",
                 ),
               ),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/RegisterScreen');
-              },
+              onPressed: _navigateToSignup,
               child: Text(
                 "Don't have an account?",
                 style: AppTextStyle.minimalTexts.copyWith(
@@ -125,12 +190,16 @@ return Scaffold(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text('Continue with Google', style: AppTextStyle.minimalTexts),
-                  const SizedBox(width: 10),
-                  Image.asset('assets/icons/googlelogo.png',
-                    width: 30,
-                    height: 30,
-                  ),
+                  TextButton(
+                            onPressed: _handleGoogleSignIn,
+                            child: Text('Continue with Google', 
+                              style: AppTextStyle.minimalTexts,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Image.asset('assets/icons/googlelogo.png',
+                          width: 30,
+                          height: 30)
                 ],
               ),
             ),
