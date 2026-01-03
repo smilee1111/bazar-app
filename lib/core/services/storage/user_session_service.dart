@@ -22,6 +22,7 @@ class UserSessionService {
   static const String _keyUserFullName = 'user_full_name';
   static const String _keyUserUsername = 'user_username';
   static const String _keyUserRoleId = 'user_role_id';
+  static const String _keyOnboardingCompleted = 'onboarding_completed';
 
   UserSessionService({required SharedPreferences prefs}) : _prefs = prefs;
 
@@ -34,6 +35,7 @@ class UserSessionService {
     String? roleId,
   }) async {
     await _prefs.setBool(_keyIsLoggedIn, true);
+    await _prefs.setBool(_keyOnboardingCompleted, true);
     await _prefs.setString(_keyUserId, userId);
     await _prefs.setString(_keyUserEmail, email);
     await _prefs.setString(_keyUserFullName, fullName);
@@ -73,6 +75,11 @@ class UserSessionService {
     return _prefs.getString(_keyUserRoleId);
   }
 
+  // Check if onboarding is completed
+  bool isOnboardingCompleted() {
+    return _prefs.getBool(_keyOnboardingCompleted) ?? false;
+  }
+
   // Clear user session (logout)
   Future<void> clearSession() async {
     await _prefs.remove(_keyIsLoggedIn);
@@ -81,5 +88,6 @@ class UserSessionService {
     await _prefs.remove(_keyUserFullName);
     await _prefs.remove(_keyUserUsername);
     await _prefs.remove(_keyUserRoleId);
+    // Keep onboarding_completed flag so user sees login next time
   }
 }

@@ -100,8 +100,8 @@ class _LoginpagescreenState extends ConsumerState<Loginpagescreen> {
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(
-                labelText: "USERNAME",
-                hintText: "e.g: John Doe",
+                labelText: "EMAIL",
+                hintText: "example@example.com",
               ),
                validator: (value) {
                     if (value == null || value.isEmpty) {
