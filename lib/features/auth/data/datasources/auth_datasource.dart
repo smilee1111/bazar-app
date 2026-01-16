@@ -13,7 +13,7 @@ abstract interface class IAuthLocalDataSource{
 }
 
 abstract interface class IAuthRemoteDataSource{
-  Future<AuthApiModel> register(AuthApiModel user);
+  Future<AuthApiModel> register(AuthApiModel user, {String? roleName, String? confirmPassword});
   Future<AuthApiModel?> login(String email, String password);
   Future<AuthApiModel?> getCurrentUser();
   Future<bool> logOut();

@@ -55,14 +55,23 @@ class _SignuppagescreenState extends ConsumerState<Signuppagescreen> {
 
    Future<void> _handleSignup() async {
     if (_formKey.currentState!.validate()) {
+      // Find the selected role name
+      final roleState = ref.read(roleViewModelProvider);
+      final selectedRole = roleState.roles.firstWhere(
+        (role) => role.roleId == _selectedRole,
+        orElse: () => roleState.roles.first,
+      );
+
       await ref
       .read(authViewModelProvider.notifier)
       .register(
         fullName: _fullnameController.text.trim(),
         email: _emailController.text.trim(),
-        username: _emailController.text.trim().split('@').first,
+        username: _usernameController.text.trim(),
         password: _passwordController.text,
-        roleId: _selectedRole,
+        confirmPassword: _confirmPasswordController.text,
+        phoneNumber: _phoneNumberController.text.trim(),
+        roleName: selectedRole.roleName,
       );
     }
    }
@@ -90,7 +99,12 @@ class _SignuppagescreenState extends ConsumerState<Signuppagescreen> {
           context,
           'Registration successful! Please login.',
         );
-        AppRoutes.pushReplacement(context, const Loginpagescreen());
+        // Small delay to allow snackbar to show before navigation
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (context.mounted) {
+            AppRoutes.pushReplacement(context, const Loginpagescreen());
+          }
+        });
       } else if (next.status == AuthStatus.error && next.errorMessage != null) {
         SnackbarUtils.showError(context, next.errorMessage!);
       }

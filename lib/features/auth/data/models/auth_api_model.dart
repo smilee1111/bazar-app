@@ -22,28 +22,48 @@ class AuthApiModel {
     this.role,
     });
 
-    //toJson
-    Map<String, dynamic> toJson(){
-      return{
-      "name" : fullName,
-      "email" :email,
-      "phoneNumber": phoneNumber,
-      "username": username,
-      "password": password,
-      "roleId" : roleId,
+    //toJson - for registration
+    Map<String, dynamic> toJson({String? roleName, String? confirmPassword}){
+      final Map<String, dynamic> data = {
+        "fullName": fullName,
+        "email": email,
+        "username": username,
+        "password": password,
+        "phoneNumber": phoneNumber != null && phoneNumber!.isNotEmpty 
+            ? int.tryParse(phoneNumber!) ?? 0 
+            : 0,
       };
+      
+      // Add role name if provided (for registration)
+      if (roleName != null) {
+        data["role"] = roleName;
+      }
+      
+      // Add confirmPassword if provided (for registration)
+      if (confirmPassword != null) {
+        data["confirmPassword"] = confirmPassword;
+      }
+      
+      // Add roleId if present (for internal use)
+      if (roleId != null) {
+        data["roleId"] = roleId;
+      }
+      
+      return data;
     }
 
     //fromJson
     factory AuthApiModel.fromJson(Map<String, dynamic> json){
       return AuthApiModel(
-        id: json['_id'] as String,
-        fullName: json['name'] as String,
-        email: json['email'] as String,
-        phoneNumber: json['phoneNumber'] as String?,
-        username: json['username'] as String,
+        id: json['_id'] as String?,
+        fullName: json['fullName'] as String? ?? json['name'] as String? ?? '',
+        email: json['email'] as String? ?? '',
+        phoneNumber: json['phoneNumber'] != null 
+            ? json['phoneNumber'].toString() 
+            : null,
+        username: json['username'] as String? ?? '',
         roleId: json['roleId'] as String?,
-        role: json['role'] != null
+        role: json['role'] != null && json['role'] is Map
           ? RoleApiModel.fromJson(json['role'] as Map<String, dynamic>)
           : null,
           );

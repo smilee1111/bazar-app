@@ -59,7 +59,16 @@ class _LoginpagescreenState extends ConsumerState<Loginpagescreen> {
     // Listen to auth state changes
     ref.listen<AuthState>(authViewModelProvider, (previous, next) {
       if (next.status == AuthStatus.authenticated) {
-        AppRoutes.pushReplacement(context, const Dashboardscreen());
+        SnackbarUtils.showSuccess(
+          context,
+          'Login successful! Welcome back.',
+        );
+        // Small delay to allow snackbar to show before navigation
+        Future.delayed(const Duration(milliseconds: 500), () {
+          if (context.mounted) {
+            AppRoutes.pushReplacement(context, const Dashboardscreen());
+          }
+        });
       } else if (next.status == AuthStatus.error && next.errorMessage != null) {
         SnackbarUtils.showError(context, next.errorMessage!);
       }
