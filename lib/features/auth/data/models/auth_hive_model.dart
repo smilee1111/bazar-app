@@ -27,10 +27,14 @@ class AuthHiveModel extends HiveObject{
   @HiveField(5)
   final String? roleId;
 
+  @HiveField(6)
+  final String? phoneNumber;
+
   AuthHiveModel({
     String? authId,
     required this.fullName,
     required this.email,
+    this.phoneNumber,
     required this.username,
     this.password,
     this.roleId,
@@ -43,6 +47,7 @@ class AuthHiveModel extends HiveObject{
       authId: authId,
       fullName: fullName,
       email: email,
+      phoneNumber: phoneNumber,
       username: username,
       password: password,
       roleId: roleId,
@@ -55,6 +60,7 @@ class AuthHiveModel extends HiveObject{
       authId: entity.authId,
       fullName: entity.fullName,
       email: entity.email,
+      phoneNumber: entity.phoneNumber,
       username: entity.username,
       password: entity.password,
       roleId: entity.roleId ?? entity.role?.roleId,

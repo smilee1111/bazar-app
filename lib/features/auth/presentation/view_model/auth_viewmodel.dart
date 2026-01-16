@@ -30,10 +30,11 @@ class AuthViewModel extends Notifier<AuthState>{
    Future<void> register({
     required String fullName,
     required String email,
+    required String phoneNumber,
     required String username,
     required String password,
-    String? phoneNumber,
-    String? roleId,
+    required String confirmPassword,
+    required String roleName,
   }) async {
     state = state.copyWith(status: AuthStatus.loading);
 
@@ -41,18 +42,26 @@ class AuthViewModel extends Notifier<AuthState>{
       RegisterParams(
         fullName: fullName,
         email: email,
+        phoneNumber: phoneNumber,
         username: username,
         password: password,
-        roleId: roleId,
+        confirmPassword: confirmPassword,
+        roleName: roleName,
       ),
     );
 
     result.fold(
-      (failure) => state = state.copyWith(
-        status: AuthStatus.error,
-        errorMessage: failure.message,
-      ),
-      (success) => state = state.copyWith(status: AuthStatus.registered),
+      (failure) {
+        print('Registration failed: ${failure.message}');
+        state = state.copyWith(
+          status: AuthStatus.error,
+          errorMessage: failure.message,
+        );
+      },
+      (success) {
+        print('Registration success!');
+        state = state.copyWith(status: AuthStatus.registered);
+      },
     );
   }
 

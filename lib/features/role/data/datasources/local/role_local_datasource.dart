@@ -11,7 +11,7 @@ final roleLocalDatasourceProvider = Provider<RoleLocalDatasource>((ref) {
   return RoleLocalDatasource(hiveService: hiveService);
 });
 
-class RoleLocalDatasource implements IRoleDataSource{
+class RoleLocalDatasource implements IRoleLocalDataSource{
 
   final HiveService _hiveService;
 
