@@ -14,42 +14,50 @@ class Dashboardscreen extends StatefulWidget {
 }
 
 class _DashboardscreenState extends State<Dashboardscreen> {
-  int _selectedIndex=0;
+  int _selectedIndex = 0;
 
-  List<Widget> lstBottomScreen =[ 
-  const Homescreen(),
-  const Savedscreen(),
-  const Favouritescreen(),
-  const Profilescreen(),
-];
+  List<Widget> lstBottomScreen = [
+    const Homescreen(),
+    const Savedscreen(),
+    const Favouritescreen(),
+    const Profilescreen(),
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body:
-       lstBottomScreen[_selectedIndex],
+      appBar: AppBar(
+        leadingWidth: 60,
+        leading: Padding(
+          padding: const EdgeInsets.only(left: 12),
+          child: Image.asset(
+            'assets/images/bazarlogo.png',
+            height: 50,
+            width: 50,
+          ),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: Icon(Icons.notifications, size: 30, color: Colors.grey[700]),
+          ),
+        ],
+      ),
+      body: IndexedStack(index: _selectedIndex, children: lstBottomScreen),
       bottomNavigationBar: BottomNavigationBar(
         iconSize: 40,
-        items: const[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home'),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.bookmark),
-            label: 'Saved'),
-           BottomNavigationBarItem(
-            icon: Icon(Icons.star),
-            label: 'Favourites'),
-           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile'),
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.bookmark), label: 'Saved'),
+          BottomNavigationBarItem(icon: Icon(Icons.star), label: 'Favourites'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
         ],
         currentIndex: _selectedIndex,
-        onTap: (index){
+        onTap: (index) {
           setState(() {
-            _selectedIndex=index;
+            _selectedIndex = index;
           });
         },
-        ),
-        );
+      ),
+    );
   }
 }

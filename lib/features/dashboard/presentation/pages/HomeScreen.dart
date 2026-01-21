@@ -6,49 +6,35 @@ class Homescreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-     
-      body: Padding(
+    return SafeArea(
+      top: false,
+      child: Padding(
         padding: const EdgeInsets.all(20),
         child: SingleChildScrollView(
-          child: SafeArea(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Image.asset('assets/images/bazarlogo.png', height: 50, width: 50,),
-                    const SizedBox(width: 10,),
-                    Icon(Icons.notifications, size: 30, color: Colors.grey[700],),
-                    
-                  ],
-                ),
-                const SizedBox(height: 20,),
-                  Container(
-                  alignment: Alignment.center,
-                  height: 50,
-                  width: double.infinity,
-                  color: Colors.brown,
-                  child: Text('Search Bar',
-                  style: AppTextStyle.buttonText),
-                ),
-                const SizedBox(height: 20,),
-                Container(
-                  alignment: Alignment.center,
-                  height: 600,
-                  width: double.infinity,
-                  color: Colors.brown,
-                  child: Text('Home Screen',
-                  style: AppTextStyle.buttonText),
-                )
-              ],
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const SizedBox(height: 20),
+              Container(
+                alignment: Alignment.center,
+                height: 50,
+                width: double.infinity,
+                color: Colors.brown,
+                child: Text('Search Bar', style: AppTextStyle.buttonText),
+              ),
+              const SizedBox(height: 20),
+              Container(
+                alignment: Alignment.center,
+                height: 600,
+                width: double.infinity,
+                color: Colors.brown,
+                child: Text('Home Screen', style: AppTextStyle.buttonText),
+              ),
+            ],
           ),
         ),
-      )
+      ),
     );
   }
 }
