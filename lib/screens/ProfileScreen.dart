@@ -104,20 +104,6 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
             ),
           ),
           const SizedBox(height: 16),
-          TextFormField(
-            controller: _nameController,
-            textInputAction: TextInputAction.done,
-            decoration: InputDecoration(
-              labelText: 'Name',
-              hintText: 'Enter your name',
-              prefixIcon: const Icon(Icons.person_outline_rounded),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-              ),
-            ),
-            onChanged: (_) => setState(() {}),
-          ),
-          const SizedBox(height: 18),
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(

@@ -48,7 +48,7 @@ class ApiEndpoints {
   // Backend: app.use('/api/auth', authRoutes)
   static const String authLogin = '/auth/login';
   static const String authRegister = '/auth/register';
-  
+  static const String itemUploadPhoto = '/items/upload-photo';
   // ============ Admin User Endpoints ============
   // Backend: app.use('/api/admin/users', adminRoutes)
   static const String adminUsers = '/admin/users';

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bazar/core/error/failure.dart';
 import 'package:bazar/core/services/connectivity/network_info.dart';
 import 'package:bazar/features/auth/data/datasources/auth_datasource.dart';
@@ -141,6 +143,20 @@ class AuthRepository implements IAuthRepository{
       return Left(LocalDatabaseFailure(message: e.toString()));
     }
   }
+  }
+
+  @override
+  Future<Either<Failure, String>> uploadPhoto(File photo) async {
+    if (await _networkInfo.isConnected) {
+      try {
+        final url = await _authRemoteDataSource.uploadPhoto(photo);
+        return Right(url);
+      } catch (e) {
+        return Left(ApiFailure(message: e.toString()));
+      }
+    } else {
+      return const Left(NetworkFailure(message: 'No internet connection'));
+    }
   }
 
 

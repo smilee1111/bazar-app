@@ -1,8 +1,12 @@
+import 'dart:io';
+
 import 'package:bazar/core/api/api_client.dart';
 import 'package:bazar/core/api/api_endpoints.dart';
+import 'package:bazar/core/services/storage/token_service.dart';
 import 'package:bazar/core/services/storage/user_session_service.dart';
 import 'package:bazar/features/auth/data/datasources/auth_datasource.dart';
 import 'package:bazar/features/auth/data/models/auth_api_model.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 
@@ -11,19 +15,23 @@ final authRemoteDataSourceProvider = Provider<IAuthRemoteDataSource>((ref) {
   return AuthRemoteDatasource(
     apiClient: ref.read(apiClientProvider),
     userSessionService: ref.read(userSessionServiceProvider),
+    tokenService: ref.read(tokenServiceProvider),
   );
 });
 
 class AuthRemoteDatasource  implements IAuthRemoteDataSource{
   final ApiClient _apiClient;
   final UserSessionService _userSessionService;
+  final TokenService _tokenService;
 
   //constructor
   AuthRemoteDatasource({
     required ApiClient apiClient,
     required UserSessionService userSessionService,
+    required TokenService tokenService,
   })  : _apiClient = apiClient,
-        _userSessionService = userSessionService;
+        _userSessionService = userSessionService,
+        _tokenService = tokenService;
 
   //methods
   @override
@@ -100,5 +108,23 @@ class AuthRemoteDatasource  implements IAuthRemoteDataSource{
   Future<bool> updateUser(AuthApiModel user) {
     // TODO: implement updateUser
     throw UnimplementedError();
+  }
+
+
+    @override
+  Future<String> uploadPhoto(File photo) async {
+    final fileName = photo.path.split('/').last;
+    final formData = FormData.fromMap({
+      'itemPhoto': await MultipartFile.fromFile(photo.path, filename: fileName),
+    });
+    // Get token from token service
+    final token = await _tokenService.getToken();
+    final response = await _apiClient.uploadFile(
+      ApiEndpoints.itemUploadPhoto,
+      formData: formData,
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
+    );
+
+    return response.data['data'];
   }
 }
