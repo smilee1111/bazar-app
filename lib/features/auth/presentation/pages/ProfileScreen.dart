@@ -1,4 +1,5 @@
 import 'package:bazar/app/routes/app_routes.dart';
+import 'package:bazar/app/theme/textstyle.dart';
 import 'package:bazar/core/api/api_endpoints.dart';
 import 'package:bazar/core/services/storage/user_session_service.dart';
 import 'package:bazar/core/utils/snackbar_utils.dart';
@@ -20,14 +21,12 @@ class Profilescreen extends ConsumerStatefulWidget {
 }
 
 class _ProfilescreenState extends ConsumerState<Profilescreen> {
-  final _nameController = TextEditingController(text: 'Ramsey');
   final _imagePicker = ImagePicker();
 
   XFile? _profilePhoto;
 
   @override
   void dispose() {
-    _nameController.dispose();
     super.dispose();
   }
 
@@ -186,6 +185,9 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
         authState.user?.profilePic ??
         session.getCurrentUserProfilePic();
     final resolvedRemoteUrl = _resolveImageUrl(remotePicturePath);
+    final usernameDisplay = authState.user?.username ??
+      session.getCurrentUserUsername() ??
+      'Your username';
 
     ImageProvider? profileImageProvider;
     if (_profilePhoto != null) {
@@ -211,10 +213,15 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
       }
     });
 
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-      child: Column(
-        children: [
+    return DefaultTextStyle.merge(
+      style: AppTextStyle.inputBox.copyWith(
+        fontSize: 14,
+        color: Colors.black87,
+      ),
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+        child: Column(
+          children: [
           SizedBox(
             height: 280,
             child: Stack(
@@ -228,33 +235,33 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
                     width: double.infinity,
                     decoration: BoxDecoration(
                       color: const Color(0xFFE8D9AE),
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(24),
                     ),
                   ),
                 ),
                 Positioned(
-                  top: 160,
+                  top: 150,
                   child: Stack(
                     children: [
                       CircleAvatar(
-                        radius: 52,
+                        radius: 58,
                         backgroundColor: Colors.white,
                         child: CircleAvatar(
-                          radius: 48,
+                          radius: 54,
                           backgroundColor: const Color(0xFFF3F3F3),
                           backgroundImage: profileImageProvider,
                           child: profileImageProvider == null
                               ? const Icon(
                                   Icons.person_outline_rounded,
-                                  size: 44,
-                                  color: Colors.black54,
+                                  size: 48,
+                                  color: Colors.black45,
                                 )
                               : null,
                         ),
                       ),
                       Positioned(
-                        right: 2,
-                        bottom: 2,
+                        right: 4,
+                        bottom: 4,
                         child: Material(
                           color: Colors.white,
                           shape: const CircleBorder(),
@@ -275,40 +282,239 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
               ],
             ),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 8),
           Text(
-            _nameController.text.trim().isEmpty
-                ? 'Your name'
-                : _nameController.text.trim(),
-            style: theme.textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.w600,
+            usernameDisplay,
+            style: AppTextStyle.inputBox.copyWith(
+              fontSize: 20,
+              fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 16),
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: () async {
-                await ref.read(authViewModelProvider.notifier).logout();
+          const SizedBox(height: 24),
+          _ContactCard(
+            phoneNumber: authState.user?.phoneNumber ??
+                session.getCurrentUserPhoneNumber() ??
+                'Add phone number',
+            email: authState.user?.email ??
+                session.getCurrentUserEmail() ??
+                'Add email',
+          ),
+          const SizedBox(height: 20),
+          _ActionCard(
+            onSettingsTap: () {
+              SnackbarUtils.showInfo(
+                context,
+                'Settings coming soon.',
+              );
+            },
+            onLogoutTap: () async {
+              await ref.read(authViewModelProvider.notifier).logout();
+              if (context.mounted) {
+                AppRoutes.pushAndRemoveUntil(
+                  context,
+                  const Loginpagescreen(),
+                );
+              }
+            },
+          ),
+          ],
+        ),
+      ),
+    );
+  }
+}
 
-                if (context.mounted) {
-                  AppRoutes.pushAndRemoveUntil(
-                    context,
-                    const Loginpagescreen(),
-                  );
-                }
-              },
-              icon: const Icon(Icons.logout),
-              label: const Text('Logout'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                foregroundColor: Colors.white,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 18,
-                  vertical: 14,
+class _ContactCard extends StatelessWidget {
+  const _ContactCard({
+    required this.phoneNumber,
+    required this.email,
+  });
+
+  final String phoneNumber;
+  final String email;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(26),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x14000000),
+            blurRadius: 20,
+            offset: Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          _ContactRow(
+            label: 'Phone',
+            value: phoneNumber,
+            icon: Icons.phone_rounded,
+          ),
+          const SizedBox(height: 18),
+          _ContactRow(
+            label: 'Mail',
+            value: email,
+            icon: Icons.mail_outline_rounded,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ContactRow extends StatelessWidget {
+  const _ContactRow({
+    required this.label,
+    required this.value,
+    required this.icon,
+  });
+
+  final String label;
+  final String value;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: const Color(0xFFF2EFE3),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(icon, size: 20, color: Colors.brown.shade700),
+        ),
+        const SizedBox(width: 16),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                label,
+                style: AppTextStyle.minimalTexts.copyWith(
+                  fontSize: 13,
+                  color: Colors.grey.shade600,
                 ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                value,
+                style: AppTextStyle.inputBox.copyWith(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _ActionCard extends StatelessWidget {
+  const _ActionCard({
+    required this.onSettingsTap,
+    required this.onLogoutTap,
+  });
+
+  final VoidCallback onSettingsTap;
+  final VoidCallback onLogoutTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(26),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x14000000),
+            blurRadius: 20,
+            offset: Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(18),
+              onTap: onSettingsTap,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF2EFE3),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        Icons.settings_outlined,
+                        size: 20,
+                        color: Colors.brown.shade700,
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        'Settings',
+                        style: AppTextStyle.inputBox.copyWith(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Icon(
+                      Icons.chevron_right_rounded,
+                      color: Colors.grey.shade500,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          const Divider(),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: Align(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 210),
+                child: ElevatedButton.icon(
+                  onPressed: onLogoutTap,
+                  icon: const Icon(Icons.logout, size: 18),
+                  label: Text(
+                    'Log Out',
+                    style: AppTextStyle.inputBox.copyWith(
+                      fontSize: 14,
+                      color: Colors.white,
+                      letterSpacing: 0.4,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.redAccent,
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 10,
+                      horizontal: 18,
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
                 ),
               ),
             ),

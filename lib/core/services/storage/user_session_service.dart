@@ -21,6 +21,7 @@ class UserSessionService {
   static const String _keyUserEmail = 'user_email';
   static const String _keyUserFullName = 'user_full_name';
   static const String _keyUserUsername = 'user_username';
+  static const String _keyUserPhoneNumber = 'user_phone_number';
   static const String _keyUserRoleId = 'user_role_id';
   static const String _keyUserProfilePic = 'user_profile_pic';
   static const String _keyOnboardingCompleted = 'onboarding_completed';
@@ -33,6 +34,7 @@ class UserSessionService {
     required String email,
     required String fullName,
     required String username,
+    String? phoneNumber,
     String? roleId,
     String? profilePic,
   }) async {
@@ -42,6 +44,11 @@ class UserSessionService {
     await _prefs.setString(_keyUserEmail, email);
     await _prefs.setString(_keyUserFullName, fullName);
     await _prefs.setString(_keyUserUsername, username);
+    if (phoneNumber != null && phoneNumber.isNotEmpty) {
+      await _prefs.setString(_keyUserPhoneNumber, phoneNumber);
+    } else {
+      await _prefs.remove(_keyUserPhoneNumber);
+    }
     if (roleId != null) {
       await _prefs.setString(_keyUserRoleId, roleId);
     }
@@ -77,6 +84,11 @@ class UserSessionService {
     return _prefs.getString(_keyUserUsername);
   }
 
+  // Get current user phone number
+  String? getCurrentUserPhoneNumber() {
+    return _prefs.getString(_keyUserPhoneNumber);
+  }
+
   // Get current user role ID
   String? getCurrentUserRoleId() {
     return _prefs.getString(_keyUserRoleId);
@@ -107,6 +119,7 @@ class UserSessionService {
     await _prefs.remove(_keyUserEmail);
     await _prefs.remove(_keyUserFullName);
     await _prefs.remove(_keyUserUsername);
+    await _prefs.remove(_keyUserPhoneNumber);
     await _prefs.remove(_keyUserRoleId);
     await _prefs.remove(_keyUserProfilePic);
     // Keep onboarding_completed flag so user sees login next time

@@ -88,6 +88,7 @@ class AuthRemoteDatasource  implements IAuthRemoteDataSource{
         email: user.email,
         fullName: user.fullName,
         username: user.username,
+        phoneNumber: user.phoneNumber,
         roleId: user.roleId,
         profilePic: user.profilePic,
       );
@@ -167,6 +168,7 @@ class AuthRemoteDatasource  implements IAuthRemoteDataSource{
       email: updatedUser.email,
       fullName: updatedUser.fullName,
       username: updatedUser.username,
+      phoneNumber: updatedUser.phoneNumber,
       roleId: updatedUser.roleId,
       profilePic: profilePic,
     );
