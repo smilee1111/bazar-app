@@ -74,6 +74,13 @@ class AuthRemoteDatasource  implements IAuthRemoteDataSource{
     if (response.data['success'] == true) {
       final data = response.data['data'] as Map<String, dynamic>;
       final user = AuthApiModel.fromJson(data);
+      final token = response.data['token'] as String?;
+
+      if (token == null || token.isEmpty) {
+        throw Exception('Login succeeded but no token was returned');
+      }
+
+      await _tokenService.saveToken(token);
 
       // Save to session
       await _userSessionService.saveUserSession(
@@ -81,6 +88,8 @@ class AuthRemoteDatasource  implements IAuthRemoteDataSource{
         email: user.email,
         fullName: user.fullName,
         username: user.username,
+        roleId: user.roleId,
+        profilePic: user.profilePic,
       );
       return user;
     }
@@ -110,7 +119,7 @@ class AuthRemoteDatasource  implements IAuthRemoteDataSource{
     await _apiClient.put(
       ApiEndpoints.adminUserById(user.id!),
       data: user.toJson(),
-      options: Options(headers: {'Authorization: ': 'Bearer $token'}),
+      options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
     return true;
   }
@@ -120,16 +129,48 @@ class AuthRemoteDatasource  implements IAuthRemoteDataSource{
   Future<String> uploadPhoto(File photo) async {
     final fileName = photo.path.split('/').last;
     final formData = FormData.fromMap({
-      'userPhoto': await MultipartFile.fromFile(photo.path, filename: fileName),
+      'image': await MultipartFile.fromFile(photo.path, filename: fileName),
     });
     // Get token from token service
     final token = await _tokenService.getToken();
-    final response = await _apiClient.uploadFile(
+    if (token == null || token.isEmpty) {
+      throw Exception('Missing authentication token. Please login again.');
+    }
+
+    final response = await _apiClient.put(
       ApiEndpoints.userUploadPhoto,
-      formData: formData,
-      options: Options(headers: {'Authorization': 'Bearer $token'}),
+      data: formData,
+      options: Options(
+        headers: {'Authorization': 'Bearer $token'},
+        contentType: 'multipart/form-data',
+      ),
     );
 
-    return response.data['data'];
+    final data = response.data['data'] as Map<String, dynamic>?;
+    if (data == null) {
+      throw Exception('Upload succeeded but no user payload was returned.');
+    }
+
+    final updatedUser = AuthApiModel.fromJson(data);
+    final profilePic = updatedUser.profilePic;
+    if (profilePic == null || profilePic.isEmpty) {
+      throw Exception('Upload succeeded but no profilePic was returned.');
+    }
+
+    final userId = updatedUser.id;
+    if (userId == null || userId.isEmpty) {
+      throw Exception('Upload succeeded but user identifier was missing.');
+    }
+
+    await _userSessionService.saveUserSession(
+      userId: userId,
+      email: updatedUser.email,
+      fullName: updatedUser.fullName,
+      username: updatedUser.username,
+      roleId: updatedUser.roleId,
+      profilePic: profilePic,
+    );
+
+    return profilePic;
   }
 }

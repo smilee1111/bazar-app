@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:bazar/features/auth/domain/entities/auth_entity.dart';
 import 'package:bazar/features/auth/domain/usecases/get_current_user_usecase.dart';
 import 'package:bazar/features/auth/domain/usecases/login_usecase.dart';
 import 'package:bazar/features/auth/domain/usecases/logout_usecase.dart';
@@ -117,14 +120,52 @@ class AuthViewModel extends Notifier<AuthState>{
         user: null,
       ),
     );
+  }
 
-    
   void clearError() {
     state = state.copyWith(errorMessage: null);
   }
+
+  Future<String?> uploadPhoto(File profilePic) async {
+    state = state.copyWith(status: AuthStatus.loading);
+
+    final result = await _uploadPhotoUsecase(profilePic);
+
+    return result.fold(
+      (failure) {
+        state = state.copyWith(
+          status: AuthStatus.error,
+          errorMessage: failure.message,
+        );
+        return null;
+      },
+      (url) {
+        final updatedUser = _copyUserWithProfilePic(url);
+        state = state.copyWith(
+          status: AuthStatus.loaded,
+          uploadedPhotoUrl: url,
+          user: updatedUser ?? state.user,
+        );
+        return url;
+      },
+    );
   }
 
-
+  AuthEntity? _copyUserWithProfilePic(String profilePicUrl) {
+    final user = state.user;
+    if (user == null) return null;
+    return AuthEntity(
+      authId: user.authId,
+      fullName: user.fullName,
+      email: user.email,
+      phoneNumber: user.phoneNumber,
+      username: user.username,
+      password: user.password,
+      profilePic: profilePicUrl,
+      roleId: user.roleId,
+      role: user.role,
+    );
+  }
 
 
   

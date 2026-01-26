@@ -17,8 +17,8 @@ class ApiEndpoints {
 
     // Configuration
   static const bool isPhysicalDevice = true;
-  static const String _ipAddress = '192.168.1.93';
-  static const int _port = 3000;
+  static const String _ipAddress = '192.168.101.9';
+  static const int _port = 5050;
 
     // Base URLs
   static String get _host {
@@ -48,7 +48,7 @@ class ApiEndpoints {
   // Backend: app.use('/api/auth', authRoutes)
   static const String authLogin = '/auth/login';
   static const String authRegister = '/auth/register';
-  static const String userUploadPhoto = '/users/upload-photo';
+  static const String userUploadPhoto = '/auth/update-profile';
     static String userPicture(String filename) =>
       '$mediaServerUrl/user_photos/$filename';
 
