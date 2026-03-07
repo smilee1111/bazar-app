@@ -14,7 +14,7 @@ void main() {
       );
 
       expect(find.text('500 m'), findsOneWidget);
-      expect(find.byIcon(Icons.location_on), findsOneWidget);
+      expect(find.byIcon(Icons.near_me_rounded), findsOneWidget);
     });
 
     testWidgets('displays distance in kilometers when 1 km or more', (WidgetTester tester) async {
@@ -27,7 +27,7 @@ void main() {
       );
 
       expect(find.text('2.5 km'), findsOneWidget);
-      expect(find.byIcon(Icons.location_on), findsOneWidget);
+      expect(find.byIcon(Icons.near_me_rounded), findsOneWidget);
     });
 
     testWidgets('displays exactly 1 km correctly', (WidgetTester tester) async {
@@ -63,7 +63,7 @@ void main() {
         ),
       );
 
-      expect(find.text('15.8 km'), findsOneWidget);
+      expect(find.text('16 km'), findsOneWidget);
     });
 
     testWidgets('returns empty SizedBox when distanceInKm is null', (WidgetTester tester) async {
@@ -120,9 +120,10 @@ void main() {
       );
 
       final row = tester.widget<Row>(find.byType(Row));
-      expect(row.children.length, 2);
+      expect(row.children.length, 3);
       expect(row.children[0], isA<Icon>());
-      expect(row.children[1], isA<Text>());
+      expect(row.children[1], isA<SizedBox>());
+      expect(row.children[2], isA<Text>());
     });
 
     testWidgets('zero distance displays as 0 m', (WidgetTester tester) async {
@@ -171,7 +172,7 @@ void main() {
         ),
       );
 
-      final icon = tester.widget<Icon>(find.byIcon(Icons.location_on));
+      final icon = tester.widget<Icon>(find.byIcon(Icons.near_me_rounded));
       expect(icon.size, 12);
     });
   });
@@ -201,7 +202,7 @@ void main() {
         ),
       );
 
-      expect(find.text('9999.99 km'), findsOneWidget);
+      expect(find.text('10000 km'), findsOneWidget);
     });
 
     testWidgets('handles very small fractional distance', (WidgetTester tester) async {
