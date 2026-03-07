@@ -23,8 +23,8 @@ void main() {
       );
 
       expect(find.byType(NearestShopsToggle), findsOneWidget);
-      expect(find.text('Show Nearest Shops'), findsOneWidget);
-      expect(find.byIcon(Icons.near_me), findsOneWidget);
+      expect(find.text('Show nearest shops only'), findsOneWidget);
+      expect(find.byIcon(Icons.location_on_outlined), findsOneWidget);
       expect(find.byType(Switch), findsOneWidget);
     });
 
@@ -140,7 +140,7 @@ void main() {
         ),
       );
 
-      expect(find.text('Select category to enable'), findsOneWidget);
+      expect(find.text('Select a category first'), findsOneWidget);
     });
 
     testWidgets('does not display hint text when category is selected', (WidgetTester tester) async {
@@ -157,7 +157,7 @@ void main() {
         ),
       );
 
-      expect(find.text('Select category to enable'), findsNothing);
+      expect(find.text('Select a category first'), findsNothing);
     });
 
     testWidgets('toggle is tappable when enabled and not loading', (WidgetTester tester) async {
@@ -200,7 +200,7 @@ void main() {
 
       final container = tester.widget<Container>(
         find.ancestor(
-          of: find.text('Show Nearest Shops'),
+          of: find.text('Show nearest shops only'),
           matching: find.byType(Container),
         ).first,
       );
