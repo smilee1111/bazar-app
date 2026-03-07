@@ -1,6 +1,7 @@
 import 'package:bazar/core/api/api_client.dart';
 import 'package:bazar/core/api/api_endpoints.dart';
 import 'package:bazar/features/shop/data/models/shop_api_model.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 abstract interface class IShopRemoteDataSource {
@@ -13,6 +14,19 @@ abstract interface class IShopRemoteDataSource {
 
   Future<List<ShopApiModel>> getPublicFeed({int page = 1, int limit = 15});
   Future<ShopApiModel> getPublicShopById(String shopId);
+
+  /// Get nearest shops by location and category
+  /// Parameters:
+  /// - categoryId: The category ID to filter shops
+  /// - lat: User's latitude
+  /// - lng: User's longitude
+  /// - limit: Maximum shops to return (default 10)
+  Future<List<ShopApiModel>> getNearestShops({
+    required String categoryId,
+    required double lat,
+    required double lng,
+    int limit = 10,
+  });
 }
 
 final shopRemoteDataSourceProvider = Provider<IShopRemoteDataSource>((ref) {
@@ -129,5 +143,23 @@ class ShopRemoteDataSource implements IShopRemoteDataSource {
       data: shop.toJson(),
     );
     return _extractShop(response.data);
+  }
+
+  @override
+  Future<List<ShopApiModel>> getNearestShops({
+    required String categoryId,
+    required double lat,
+    required double lng,
+    int limit = 10,
+  }) async {
+    final response = await _apiClient.get(
+      ApiEndpoints.publicNearestShopsWithParams(
+        categoryId: categoryId,
+        lat: lat,
+        lng: lng,
+        limit: limit,
+      ),
+    );
+    return _extractShopList(response.data);
   }
 }

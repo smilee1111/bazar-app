@@ -15,4 +15,12 @@ abstract interface class IShopRepository {
     int limit = 15,
   });
   Future<Either<Failure, ShopEntity>> getPublicShopById(String shopId);
+
+  /// Get nearest shops by location and category
+  Future<Either<Failure, List<ShopEntity>>> getNearestShops({
+    required String categoryId,
+    required double lat,
+    required double lng,
+    int limit = 10,
+  });
 }

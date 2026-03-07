@@ -2,11 +2,13 @@ import 'package:bazar/features/category/domain/entities/category_entity.dart';
 
 class CategoryApiModel {
   final String? id;
+  final String? categoryId;
   final String categoryName;
 
 
   CategoryApiModel({
     this.id,
+    this.categoryId,
     required this.categoryName,
   });
 
@@ -21,14 +23,15 @@ class CategoryApiModel {
 //fromJSON
   factory CategoryApiModel.fromJson(Map<String,dynamic> json){
     return CategoryApiModel(
-      id: json['_id'] as String,
+      id: json['_id'] as String?,
+      categoryId: json['categoryId'] as String?,
       categoryName: json['categoryName'] as String,
     );
   }
   //toEntity
  CategoryEntity toEntity(){
     return CategoryEntity(
-    categoryId: id,
+    categoryId: categoryId ?? id,
     categoryName: categoryName,
 );
   }

@@ -16,7 +16,6 @@ void main() {
     );
 
     final json = model.toJson(
-      roleName: "user",
       confirmPassword: "password123",
     );
 
@@ -24,8 +23,10 @@ void main() {
     expect(json["email"], "testuser1@gmail.com");
     expect(json["username"], "testuserre");
     expect(json["password"], "password123");
-    expect(json["role"], "user");
+    expect(json.containsKey("role"), isFalse);
+    expect(json["roleId"], isNull);
     expect(json["confirmPassword"], "password123");
+    expect(json["phoneNumber"], isA<int>());
     expect(json["phoneNumber"], 9866321325);
   });
 

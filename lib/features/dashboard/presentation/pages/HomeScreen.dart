@@ -1,11 +1,13 @@
 ﻿import 'package:bazar/app/theme/colors.dart';
 import 'package:bazar/app/theme/textstyle.dart';
+import 'package:bazar/core/utils/snackbar_utils.dart';
 import 'package:bazar/features/category/domain/entities/category_entity.dart';
 import 'package:bazar/features/category/domain/usecases/get_all_category_usecase.dart';
 import 'package:bazar/features/dashboard/presentation/view_model/shop_card_preview_provider.dart';
 import 'package:bazar/features/dashboard/presentation/widgets/home_empty_state.dart';
 import 'package:bazar/features/dashboard/presentation/widgets/home_skeleton_card.dart';
 import 'package:bazar/features/dashboard/presentation/widgets/home_top_banner.dart';
+import 'package:bazar/features/dashboard/presentation/widgets/nearest_shops_toggle.dart';
 import 'package:bazar/features/dashboard/presentation/widgets/public_shop_card.dart';
 import 'package:bazar/features/dashboard/presentation/widgets/shop_filter_sheet.dart';
 import 'package:bazar/features/favourite/presentation/view_model/favourite_view_model.dart';
@@ -14,6 +16,7 @@ import 'package:bazar/features/sensor/presentation/state/sensor_state.dart';
 import 'package:bazar/features/sensor/presentation/view_model/sensor_view_model.dart';
 import 'package:bazar/features/shop/domain/entities/shop_entity.dart';
 import 'package:bazar/features/shop/presentation/pages/shop_public_detail_page.dart';
+import 'package:bazar/features/shop/presentation/state/shop_state.dart';
 import 'package:bazar/features/shop/presentation/view_model/shop_view_model.dart';
 import 'package:bazar/features/shopReview/presentation/view_model/user_review_view_model.dart';
 import 'package:flutter/material.dart';
@@ -116,7 +119,22 @@ class _HomescreenState extends ConsumerState<Homescreen> {
       initialFilters: _filters,
       categories: _categories,
     );
-    if (applied != null) setState(() => _filters = applied);
+    if (applied != null) {
+      setState(() => _filters = applied);
+      // Update selected category in shop view model
+      final categoryName = applied.categoryName;
+      if (categoryName != null && categoryName.isNotEmpty) {
+        final category = _categories.firstWhere(
+          (c) => c.categoryName == categoryName,
+          orElse: () => _categories.first,
+        );
+        ref.read(shopViewModelProvider.notifier).setSelectedCategory(
+          category.categoryId,
+        );
+      } else {
+        ref.read(shopViewModelProvider.notifier).setSelectedCategory(null);
+      }
+    }
   }
 
   bool _matchesCategoryAndLocation(ShopEntity shop) {
@@ -187,7 +205,15 @@ class _HomescreenState extends ConsumerState<Homescreen> {
       if (next.shakeCount > previousCount) _onShakeDetected();
     });
 
+    // Listen to shop state errors for toast notifications
+    ref.listen<ShopState>(shopViewModelProvider, (previous, next) {
+      if (next.errorMessage != null && next.errorMessage!.isNotEmpty) {
+        SnackbarUtils.showError(context, next.errorMessage!);
+      }
+    });
+
     final shopState = ref.watch(shopViewModelProvider);
+    final shopViewModel = ref.read(shopViewModelProvider.notifier);
     final savedState = ref.watch(savedShopViewModelProvider);
     final favouriteState = ref.watch(favouriteViewModelProvider);
     final userReviewState = ref.watch(userReviewViewModelProvider);
@@ -198,7 +224,9 @@ class _HomescreenState extends ConsumerState<Homescreen> {
     };
 
     final query = _searchCtrl.text.trim().toLowerCase();
-    final filtered = shopState.publicShops.where((shop) {
+    // Use displayedShops which automatically switches between all shops and nearest shops
+    final baseShops = shopState.displayedShops;
+    final filtered = baseShops.where((shop) {
       final queryMatch =
           query.isEmpty ||
           shop.shopName.toLowerCase().contains(query) ||
@@ -230,6 +258,45 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                   onQueryChanged: () => setState(() {}),
                   onClear: () => setState(() => _searchCtrl.clear()),
                   onOpenFilters: _openFilters,
+                ),
+              ),
+            ),
+            // Nearest Shops Toggle
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                child: NearestShopsToggle(
+                  isEnabled: shopState.showNearestOnly,
+                  isLoading: shopState.isLoadingNearest,
+                  categorySelected: shopState.selectedCategoryId != null,
+                  onToggle: (enabled) async {
+                    if (enabled && shopState.selectedCategoryId == null) {
+                      SnackbarUtils.showWarning(
+                        context,
+                        'Please select a category from filters first',
+                      );
+                      return;
+                    }
+
+                    if (enabled) {
+                      SnackbarUtils.showInfo(
+                        context,
+                        'Fetching your location...',
+                      );
+                      await shopViewModel.toggleNearestFilter(enable: true);
+
+                      final state = ref.read(shopViewModelProvider);
+                      if (state.showNearestOnly && mounted) {
+                        final count = state.nearestShops.length;
+                        SnackbarUtils.showSuccess(
+                          context,
+                          'Found $count shop${count != 1 ? "s" : ""} nearby',
+                        );
+                      }
+                    } else {
+                      await shopViewModel.toggleNearestFilter(enable: false);
+                    }
+                  },
                 ),
               ),
             ),
@@ -283,10 +350,15 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                             orElse: () => true,
                           );
                     if (!ratingPass) return const SizedBox.shrink();
+                    
+                    // Calculate distance if location is available
+                    final distance = shopViewModel.calculateDistance(shop);
+                    
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: PublicShopCard(
                         shop: shop,
+                        distanceInKm: distance,
                         onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(

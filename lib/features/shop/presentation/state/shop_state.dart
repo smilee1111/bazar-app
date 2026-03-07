@@ -20,6 +20,14 @@ class ShopState extends Equatable {
   final bool hasMore;
   final bool isLoadingMore;
 
+  // Nearest shops filter fields
+  final bool showNearestOnly;
+  final bool isLoadingNearest;
+  final List<ShopEntity> nearestShops;
+  final String? selectedCategoryId;
+  final double? userLatitude;
+  final double? userLongitude;
+
   const ShopState({
     this.isLoadingPublic = false,
     this.isLoadingSeller = false,
@@ -34,7 +42,17 @@ class ShopState extends Equatable {
     this.currentPage = 0,
     this.hasMore = true,
     this.isLoadingMore = false,
+    this.showNearestOnly = false,
+    this.isLoadingNearest = false,
+    this.nearestShops = const [],
+    this.selectedCategoryId,
+    this.userLatitude,
+    this.userLongitude,
   });
+
+  /// Get the current list of shops to display based on filter state
+  List<ShopEntity> get displayedShops =>
+      showNearestOnly ? nearestShops : publicShops;
 
   ShopState copyWith({
     bool? isLoadingPublic,
@@ -52,6 +70,14 @@ class ShopState extends Equatable {
     int? currentPage,
     bool? hasMore,
     bool? isLoadingMore,
+    bool? showNearestOnly,
+    bool? isLoadingNearest,
+    List<ShopEntity>? nearestShops,
+    String? selectedCategoryId,
+    bool clearCategoryId = false,
+    double? userLatitude,
+    double? userLongitude,
+    bool clearLocation = false,
   }) {
     return ShopState(
       isLoadingPublic: isLoadingPublic ?? this.isLoadingPublic,
@@ -67,6 +93,16 @@ class ShopState extends Equatable {
       currentPage: currentPage ?? this.currentPage,
       hasMore: hasMore ?? this.hasMore,
       isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      showNearestOnly: showNearestOnly ?? this.showNearestOnly,
+      isLoadingNearest: isLoadingNearest ?? this.isLoadingNearest,
+      nearestShops: nearestShops ?? this.nearestShops,
+      selectedCategoryId: clearCategoryId
+          ? null
+          : (selectedCategoryId ?? this.selectedCategoryId),
+      userLatitude:
+          clearLocation ? null : (userLatitude ?? this.userLatitude),
+      userLongitude:
+          clearLocation ? null : (userLongitude ?? this.userLongitude),
     );
   }
 
@@ -85,6 +121,12 @@ class ShopState extends Equatable {
     currentPage,
     hasMore,
     isLoadingMore,
+    showNearestOnly,
+    isLoadingNearest,
+    nearestShops,
+    selectedCategoryId,
+    userLatitude,
+    userLongitude,
   ];
 }
 

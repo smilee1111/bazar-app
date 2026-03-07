@@ -4,8 +4,10 @@ import 'package:bazar/features/shop/domain/usecases/create_shop_usecase.dart';
 import 'package:bazar/features/shop/domain/usecases/delete_shop_usecase.dart';
 import 'package:bazar/features/shop/domain/usecases/get_my_seller_shop_usecase.dart';
 import 'package:bazar/features/shop/domain/usecases/get_public_feed_usecase.dart';
+import 'package:bazar/features/shop/domain/usecases/get_nearest_shops_usecase.dart';
 import 'package:bazar/features/shop/domain/usecases/update_shop_usecase.dart';
 import 'package:bazar/features/shop/presentation/state/shop_state.dart';
+import 'package:bazar/core/services/location/geolocation_provider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final shopViewModelProvider = NotifierProvider<ShopViewModel, ShopState>(
@@ -18,6 +20,7 @@ class ShopViewModel extends Notifier<ShopState> {
   late final CreateShopUsecase _createShopUsecase;
   late final UpdateShopUsecase _updateShopUsecase;
   late final DeleteShopUsecase _deleteShopUsecase;
+  late final GetNearestShopsUsecase _getNearestShopsUsecase;
 
   @override
   ShopState build() {
@@ -26,6 +29,7 @@ class ShopViewModel extends Notifier<ShopState> {
     _createShopUsecase = ref.read(createShopUsecaseProvider);
     _updateShopUsecase = ref.read(updateShopUsecaseProvider);
     _deleteShopUsecase = ref.read(deleteShopUsecaseProvider);
+    _getNearestShopsUsecase = ref.read(getNearestShopsUsecaseProvider);
     return const ShopState();
   }
 
@@ -178,5 +182,133 @@ class ShopViewModel extends Notifier<ShopState> {
 
   void clearError() {
     state = state.copyWith(clearError: true);
+  }
+
+  /// Set the selected category ID for filtering
+  void setSelectedCategory(String? categoryId) {
+    state = state.copyWith(
+      selectedCategoryId: categoryId,
+      clearCategoryId: categoryId == null,
+      clearError: true,
+    );
+  }
+
+  /// Toggle the "show nearest only" filter
+  /// If enabled and category is selected, fetches nearest shops
+  Future<void> toggleNearestFilter({bool? enable}) async {
+    final newValue = enable ?? !state.showNearestOnly;
+
+    // If enabling the filter, require a category
+    if (newValue && state.selectedCategoryId == null) {
+      state = state.copyWith(
+        errorMessage: 'Please select a category first',
+      );
+      return;
+    }
+
+    // Update state to reflect toggle
+    state = state.copyWith(
+      showNearestOnly: newValue,
+      clearError: true,
+    );
+
+    // If enabling, load nearest shops
+    if (newValue && state.selectedCategoryId != null) {
+      await loadNearestShops();
+    }
+  }
+
+  /// Load nearest shops based on user location and selected category
+  Future<void> loadNearestShops() async {
+    if (state.isLoadingNearest) return;
+
+    // Validate category is selected
+    final categoryId = state.selectedCategoryId;
+    if (categoryId == null) {
+      state = state.copyWith(
+        errorMessage: 'Please select a category',
+        showNearestOnly: false,
+      );
+      return;
+    }
+
+    state = state.copyWith(isLoadingNearest: true, clearError: true);
+
+    try {
+      // Get user location
+      final geolocationNotifier = ref.read(geolocationProvider.notifier);
+      final userLocation = await geolocationNotifier.getCurrentLocation();
+
+      if (userLocation == null) {
+        // Location fetch failed
+        final geolocationState = ref.read(geolocationProvider);
+        state = state.copyWith(
+          isLoadingNearest: false,
+          showNearestOnly: false,
+          errorMessage: geolocationState.errorMessage ??
+              'Failed to get your location',
+        );
+        return;
+      }
+
+      // Store user location in state
+      state = state.copyWith(
+        userLatitude: userLocation.latitude,
+        userLongitude: userLocation.longitude,
+      );
+
+      // Fetch nearest shops
+      final result = await _getNearestShopsUsecase(
+        NearestShopsParams(
+          categoryId: categoryId,
+          lat: userLocation.latitude,
+          lng: userLocation.longitude,
+          limit: 10,
+        ),
+      );
+
+      result.fold(
+        (failure) {
+          state = state.copyWith(
+            isLoadingNearest: false,
+            showNearestOnly: false,
+            errorMessage: failure.message,
+          );
+        },
+        (shops) {
+          state = state.copyWith(
+            isLoadingNearest: false,
+            nearestShops: shops,
+            clearError: true,
+          );
+        },
+      );
+    } catch (e) {
+      state = state.copyWith(
+        isLoadingNearest: false,
+        showNearestOnly: false,
+        errorMessage: 'Error: ${e.toString()}',
+      );
+    }
+  }
+
+  /// Calculate distance from user to a shop in km
+  double? calculateDistance(ShopEntity shop) {
+    if (state.userLatitude == null ||
+        state.userLongitude == null ||
+        shop.location == null) {
+      return null;
+    }
+
+    final userLocation = UserLocation(
+      latitude: state.userLatitude!,
+      longitude: state.userLongitude!,
+      fetchedAt: DateTime.now(),
+    );
+
+    return userLocation.distanceTo(
+      shop.location!.latitude,
+      shop.location!.longitude,
+    );
   }
 }

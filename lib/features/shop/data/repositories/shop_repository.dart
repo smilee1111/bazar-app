@@ -229,4 +229,37 @@ class ShopRepository implements IShopRepository {
       return Left(LocalDatabaseFailure(message: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failure, List<ShopEntity>>> getNearestShops({
+    required String categoryId,
+    required double lat,
+    required double lng,
+    int limit = 10,
+  }) async {
+    if (!await _networkInfo.isConnected) {
+      return const Left(NetworkFailure(message: 'No internet connection'));
+    }
+    try {
+      final models = await _remoteDataSource.getNearestShops(
+        categoryId: categoryId,
+        lat: lat,
+        lng: lng,
+        limit: limit,
+      );
+      return Right(ShopApiModel.toEntityList(models));
+    } on DioException catch (e) {
+      return Left(
+        ApiFailure(
+          statusCode: e.response?.statusCode,
+          message: _extractErrorMessage(
+            e.response?.data,
+            'Failed to fetch nearest shops',
+          ),
+        ),
+      );
+    } catch (e) {
+      return Left(LocalDatabaseFailure(message: e.toString()));
+    }
+  }
 }

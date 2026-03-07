@@ -16,7 +16,7 @@ class ApiEndpoints {
 
   // Configuration
   static const bool isPhysicalDevice = true;
-  static const String _ipAddress = '192.168.1.93';
+  static const String _ipAddress = '192.168.1.165';
   //192.168.1.93
   //192.168.101.11'
   static const int _port = 5050;
@@ -61,6 +61,14 @@ class ApiEndpoints {
   static String publicShopById(String shopId) => '/shops/public/$shopId';
   static String publicShopRouteById(String shopId) =>
       '/shops/public/$shopId/route';
+  static const String publicNearestShops = '/shops/nearest';
+  static String publicNearestShopsWithParams({
+    required String categoryId,
+    required double lat,
+    required double lng,
+    int limit = 10,
+  }) =>
+      '/shops/nearest?categoryId=$categoryId&lat=$lat&lng=$lng&limit=$limit';
   static String sellerShopById(String id) => '/seller/shops/$id';
   static const String mySellerShop = '/seller/shops/my';
   static const String userReviews = '/user/reviews';

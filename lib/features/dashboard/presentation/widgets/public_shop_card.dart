@@ -1,6 +1,7 @@
 import 'package:bazar/app/theme/colors.dart';
 import 'package:bazar/app/theme/textstyle.dart';
 import 'package:bazar/features/dashboard/presentation/view_model/shop_card_preview_provider.dart';
+import 'package:bazar/features/dashboard/presentation/widgets/shop_distance_badge.dart';
 import 'package:bazar/features/shop/domain/entities/shop_entity.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,6 +18,7 @@ class PublicShopCard extends ConsumerWidget {
     required this.isReviewed,
     this.isSaveBusy = false,
     this.isFavouriteBusy = false,
+    this.distanceInKm,
   });
 
   final ShopEntity shop;
@@ -28,6 +30,7 @@ class PublicShopCard extends ConsumerWidget {
   final bool isReviewed;
   final bool isSaveBusy;
   final bool isFavouriteBusy;
+  final double? distanceInKm;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -104,6 +107,10 @@ class PublicShopCard extends ConsumerWidget {
                     average: preview.averageRating,
                     reviewCount: preview.reviewCount,
                   ),
+                  if (distanceInKm != null) ...[
+                    const SizedBox(width: 8),
+                    ShopDistanceBadge(distanceInKm: distanceInKm),
+                  ],
                   if ((preview.priceRange ?? '').trim().isNotEmpty) ...[
                     const SizedBox(width: 8),
                     _MetaTag(label: preview.priceRange!),
