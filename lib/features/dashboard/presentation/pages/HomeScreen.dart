@@ -1,4 +1,4 @@
-﻿import 'package:bazar/app/theme/colors.dart';
+import 'package:bazar/app/theme/colors.dart';
 import 'package:bazar/app/theme/textstyle.dart';
 import 'package:bazar/core/utils/snackbar_utils.dart';
 import 'package:bazar/features/category/domain/entities/category_entity.dart';
@@ -71,6 +71,14 @@ class _HomescreenState extends ConsumerState<Homescreen> {
   }
 
   Future<void> _refreshFeeds({bool forceRefresh = true}) async {
+    // If nearest filter is on but no category selected, disable it
+    final shopState = ref.read(shopViewModelProvider);
+    if (shopState.showNearestOnly && shopState.selectedCategoryId == null) {
+      await ref
+          .read(shopViewModelProvider.notifier)
+          .toggleNearestFilter(enable: false);
+    }
+
     await Future.wait([
       ref
           .read(shopViewModelProvider.notifier)
@@ -132,7 +140,14 @@ class _HomescreenState extends ConsumerState<Homescreen> {
             .read(shopViewModelProvider.notifier)
             .setSelectedCategory(category.categoryId);
       } else {
+        // When category is cleared, also disable nearest filter
         ref.read(shopViewModelProvider.notifier).setSelectedCategory(null);
+        final shopState = ref.read(shopViewModelProvider);
+        if (shopState.showNearestOnly) {
+          ref
+              .read(shopViewModelProvider.notifier)
+              .toggleNearestFilter(enable: false);
+        }
       }
     }
   }
