@@ -32,12 +32,12 @@ class _NotificationBellState extends ConsumerState<NotificationBell> {
       return;
     }
     HapticFeedback.selectionClick();
-    await ref.read(notificationViewModelProvider.notifier).loadUnreadCount(
-      forceRefresh: true,
-    );
-    await ref.read(notificationViewModelProvider.notifier).loadNotifications(
-      forceRefresh: true,
-    );
+    await ref
+        .read(notificationViewModelProvider.notifier)
+        .loadUnreadCount(forceRefresh: true);
+    await ref
+        .read(notificationViewModelProvider.notifier)
+        .loadNotifications(forceRefresh: true);
     if (!mounted) return;
     _showOverlay();
   }
@@ -67,6 +67,7 @@ class _NotificationBellState extends ConsumerState<NotificationBell> {
                 color: Colors.transparent,
                 child: Consumer(
                   builder: (context, ref, _) {
+                    final colorScheme = Theme.of(context).colorScheme;
                     final state = ref.watch(notificationViewModelProvider);
                     final recent = ref
                         .read(notificationViewModelProvider.notifier)
@@ -77,12 +78,14 @@ class _NotificationBellState extends ConsumerState<NotificationBell> {
                       constraints: const BoxConstraints(maxHeight: 520),
                       padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: colorScheme.surface,
                         borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: const Color(0xFFE8E5DA)),
-                        boxShadow: const [
+                        border: Border.all(
+                          color: colorScheme.onSurface.withValues(alpha: 0.14),
+                        ),
+                        boxShadow: [
                           BoxShadow(
-                            color: Color(0x26000000),
+                            color: colorScheme.primary.withValues(alpha: 0.14),
                             blurRadius: 24,
                             offset: Offset(0, 12),
                           ),
@@ -100,6 +103,7 @@ class _NotificationBellState extends ConsumerState<NotificationBell> {
                                   style: AppTextStyle.inputBox.copyWith(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w700,
+                                    color: colorScheme.onSurface,
                                   ),
                                 ),
                                 const Spacer(),
@@ -157,7 +161,9 @@ class _NotificationBellState extends ConsumerState<NotificationBell> {
                                 'No notifications yet',
                                 style: AppTextStyle.minimalTexts.copyWith(
                                   fontSize: 12,
-                                  color: Colors.grey.shade600,
+                                  color: colorScheme.onSurface.withValues(
+                                    alpha: 0.72,
+                                  ),
                                 ),
                               ),
                             )
@@ -215,7 +221,8 @@ class _NotificationBellState extends ConsumerState<NotificationBell> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => const NotificationListPage(),
+                                    builder: (_) =>
+                                        const NotificationListPage(),
                                   ),
                                 );
                               },
@@ -248,6 +255,7 @@ class _NotificationBellState extends ConsumerState<NotificationBell> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final unreadCount = ref.watch(
       notificationViewModelProvider.select((value) => value.unreadCount),
     );
@@ -257,16 +265,16 @@ class _NotificationBellState extends ConsumerState<NotificationBell> {
         clipBehavior: Clip.none,
         children: [
           Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
+            decoration: BoxDecoration(
+              color: colorScheme.surface,
               shape: BoxShape.circle,
             ),
             child: IconButton(
               tooltip: 'Notifications',
               onPressed: _toggleOverlay,
-              icon: const Icon(
+              icon: Icon(
                 Icons.notifications_rounded,
-                color: AppColors.primary,
+                color: colorScheme.primary,
                 size: 24,
               ),
             ),

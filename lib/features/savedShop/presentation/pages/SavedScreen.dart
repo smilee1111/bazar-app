@@ -31,6 +31,7 @@ class _SavedscreenState extends ConsumerState<Savedscreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final shopState = ref.watch(shopViewModelProvider);
     final savedState = ref.watch(savedShopViewModelProvider);
     final favouriteState = ref.watch(favouriteViewModelProvider);
@@ -49,9 +50,15 @@ class _SavedscreenState extends ConsumerState<Savedscreen> {
     return RefreshIndicator(
       onRefresh: () async {
         await Future.wait([
-          ref.read(shopViewModelProvider.notifier).loadPublicShops(forceRefresh: true),
-          ref.read(savedShopViewModelProvider.notifier).loadSavedShops(forceRefresh: true),
-          ref.read(favouriteViewModelProvider.notifier).loadFavourites(forceRefresh: true),
+          ref
+              .read(shopViewModelProvider.notifier)
+              .loadPublicShops(forceRefresh: true),
+          ref
+              .read(savedShopViewModelProvider.notifier)
+              .loadSavedShops(forceRefresh: true),
+          ref
+              .read(favouriteViewModelProvider.notifier)
+              .loadFavourites(forceRefresh: true),
           ref
               .read(userReviewViewModelProvider.notifier)
               .loadReviewedShops(forceRefresh: true),
@@ -65,12 +72,16 @@ class _SavedscreenState extends ConsumerState<Savedscreen> {
             style: AppTextStyle.inputBox.copyWith(
               fontSize: 20,
               fontWeight: FontWeight.w700,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 4),
           Text(
             'Save shops to revisit them later.',
-            style: AppTextStyle.minimalTexts.copyWith(fontSize: 12),
+            style: AppTextStyle.minimalTexts.copyWith(
+              fontSize: 12,
+              color: colorScheme.onSurface.withValues(alpha: 0.74),
+            ),
           ),
           const SizedBox(height: 12),
           if (savedState.isLoading && savedState.savedShops.isEmpty)
@@ -81,7 +92,10 @@ class _SavedscreenState extends ConsumerState<Savedscreen> {
               child: Center(
                 child: Text(
                   'No saved shops yet.',
-                  style: AppTextStyle.minimalTexts.copyWith(fontSize: 13),
+                  style: AppTextStyle.minimalTexts.copyWith(
+                    fontSize: 13,
+                    color: colorScheme.onSurface.withValues(alpha: 0.74),
+                  ),
                 ),
               ),
             ),
@@ -103,19 +117,25 @@ class _SavedscreenState extends ConsumerState<Savedscreen> {
                   shop.shopId ?? '',
                 ),
                 isReviewed: reviewedIds.contains(shop.shopId ?? ''),
-                isSaveBusy: savedState.processingShopIds.contains(shop.shopId ?? ''),
+                isSaveBusy: savedState.processingShopIds.contains(
+                  shop.shopId ?? '',
+                ),
                 isFavouriteBusy: favouriteState.processingShopIds.contains(
                   shop.shopId ?? '',
                 ),
                 onToggleSave: () {
                   final shopId = shop.shopId ?? '';
                   if (shopId.isEmpty) return;
-                  ref.read(savedShopViewModelProvider.notifier).toggleSaved(shopId);
+                  ref
+                      .read(savedShopViewModelProvider.notifier)
+                      .toggleSaved(shopId);
                 },
                 onToggleFavourite: () {
                   final shopId = shop.shopId ?? '';
                   if (shopId.isEmpty) return;
-                  ref.read(favouriteViewModelProvider.notifier).toggleFavourite(
+                  ref
+                      .read(favouriteViewModelProvider.notifier)
+                      .toggleFavourite(
                         shopId: shopId,
                         isReviewed: reviewedIds.contains(shopId) ? true : null,
                       );

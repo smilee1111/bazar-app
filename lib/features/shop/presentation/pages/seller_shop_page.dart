@@ -45,6 +45,7 @@ class _SellerShopPageState extends ConsumerState<SellerShopPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final state = ref.watch(shopViewModelProvider);
     final myShop = state.myShop;
 
@@ -67,6 +68,7 @@ class _SellerShopPageState extends ConsumerState<SellerShopPage> {
                     style: AppTextStyle.inputBox.copyWith(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -77,7 +79,7 @@ class _SellerShopPageState extends ConsumerState<SellerShopPage> {
               'Update and maintain your seller shop details.',
               style: AppTextStyle.minimalTexts.copyWith(
                 fontSize: 13,
-                color: Colors.grey.shade700,
+                color: colorScheme.onSurface.withValues(alpha: 0.74),
               ),
             ),
             const SizedBox(height: 16),
@@ -119,6 +121,8 @@ class _SectionTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(
@@ -126,6 +130,7 @@ class _SectionTitle extends StatelessWidget {
         style: AppTextStyle.inputBox.copyWith(
           fontSize: 15,
           fontWeight: FontWeight.w700,
+          color: colorScheme.onSurface,
         ),
       ),
     );
@@ -175,6 +180,7 @@ class _ShopCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final categoryText = shop.categoryNames.isEmpty
         ? 'Uncategorized'
         : shop.categoryNames.join(', ');
@@ -182,7 +188,9 @@ class _ShopCard extends StatelessWidget {
         ? 'Not specified'
         : shop.priceRange!.trim();
     final descText = (shop.description ?? '').trim();
-    final slugText = (shop.slug ?? '').trim().isEmpty ? '--' : shop.slug!.trim();
+    final slugText = (shop.slug ?? '').trim().isEmpty
+        ? '--'
+        : shop.slug!.trim();
     final secondaryPhone = (shop.contactNumber ?? '').trim();
     final email = (shop.email ?? '').trim();
 
@@ -190,9 +198,11 @@ class _ShopCard extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.accent2),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.14),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,6 +215,7 @@ class _ShopCard extends StatelessWidget {
                   style: AppTextStyle.inputBox.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -243,7 +254,7 @@ class _ShopCard extends StatelessWidget {
                 descText,
                 style: AppTextStyle.minimalTexts.copyWith(
                   fontSize: 12,
-                  color: Colors.grey.shade800,
+                  color: colorScheme.onSurface.withValues(alpha: 0.76),
                 ),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
@@ -290,16 +301,21 @@ class _MiniRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         children: [
-          Icon(icon, size: 16, color: AppColors.primary),
+          Icon(icon, size: 16, color: colorScheme.primary),
           const SizedBox(width: 6),
           Expanded(
             child: Text(
               value,
-              style: AppTextStyle.inputBox.copyWith(fontSize: 12),
+              style: AppTextStyle.inputBox.copyWith(
+                fontSize: 12,
+                color: colorScheme.onSurface,
+              ),
             ),
           ),
         ],
@@ -322,6 +338,8 @@ class _MetaGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Wrap(
       spacing: 8,
       runSpacing: 8,
@@ -331,9 +349,11 @@ class _MetaGrid extends StatelessWidget {
               constraints: const BoxConstraints(minWidth: 145, maxWidth: 220),
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFF8F7F2),
+                color: colorScheme.primary.withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.accent2),
+                border: Border.all(
+                  color: colorScheme.onSurface.withValues(alpha: 0.14),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -342,7 +362,7 @@ class _MetaGrid extends StatelessWidget {
                     item.label,
                     style: AppTextStyle.minimalTexts.copyWith(
                       fontSize: 10,
-                      color: Colors.grey.shade700,
+                      color: colorScheme.onSurface.withValues(alpha: 0.74),
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -351,6 +371,7 @@ class _MetaGrid extends StatelessWidget {
                     style: AppTextStyle.inputBox.copyWith(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
+                      color: colorScheme.onSurface,
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,

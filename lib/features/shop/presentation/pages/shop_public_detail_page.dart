@@ -117,7 +117,8 @@ class _ShopPublicDetailPageState extends ConsumerState<ShopPublicDetailPage> {
 
     setState(() => _isLoadingRoute = true);
     try {
-      final userLoc = fromLocation ?? await _locationService.getCurrentLocation();
+      final userLoc =
+          fromLocation ?? await _locationService.getCurrentLocation();
       if (!mounted) return;
       if (userLoc == null) {
         setState(() => _isLoadingRoute = false);
@@ -176,7 +177,8 @@ class _ShopPublicDetailPageState extends ConsumerState<ShopPublicDetailPage> {
 
     final now = DateTime.now();
     if (_lastAutoRouteRefreshAt != null &&
-        now.difference(_lastAutoRouteRefreshAt!) < const Duration(seconds: 15)) {
+        now.difference(_lastAutoRouteRefreshAt!) <
+            const Duration(seconds: 15)) {
       return;
     }
     _lastAutoRouteRefreshAt = now;
@@ -643,6 +645,7 @@ class _ShopPublicDetailPageState extends ConsumerState<ShopPublicDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     ref.listen<SensorState>(sensorViewModelProvider, (previous, next) {
       final startedMoving = !(previous?.isMoving ?? false) && next.isMoving;
       if (!startedMoving || _userLocation == null) return;
@@ -678,233 +681,244 @@ class _ShopPublicDetailPageState extends ConsumerState<ShopPublicDetailPage> {
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
               children: [
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: AppColors.accent2),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: colorScheme.surface,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: colorScheme.onSurface.withValues(alpha: 0.14),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        child: Text(
-                          widget.shop.shopName,
-                          style: AppTextStyle.inputBox.copyWith(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              widget.shop.shopName,
+                              style: AppTextStyle.inputBox.copyWith(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 34,
+                            height: 34,
+                            child: isFavouriteBusy
+                                ? const Padding(
+                                    padding: EdgeInsets.all(7),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : IconButton(
+                                    tooltip: isFavourite
+                                        ? 'Remove from favourites'
+                                        : 'Add to favourites',
+                                    onPressed: () => _toggleFavouriteShop(
+                                      reviewed: isReviewed,
+                                    ),
+                                    icon: Icon(
+                                      isFavourite
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color: isFavourite
+                                          ? AppColors.error
+                                          : colorScheme.onSurface.withValues(
+                                              alpha: 0.62,
+                                            ),
+                                    ),
+                                  ),
+                          ),
+                          SizedBox(
+                            width: 34,
+                            height: 34,
+                            child: isSaveBusy
+                                ? const Padding(
+                                    padding: EdgeInsets.all(7),
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                : IconButton(
+                                    tooltip: isSaved
+                                        ? 'Remove from saved'
+                                        : 'Save shop',
+                                    onPressed: _toggleSaveShop,
+                                    icon: Icon(
+                                      isSaved
+                                          ? Icons.bookmark
+                                          : Icons.bookmark_border,
+                                      color: isSaved
+                                          ? AppColors.primary
+                                          : colorScheme.onSurface.withValues(
+                                              alpha: 0.62,
+                                            ),
+                                    ),
+                                  ),
+                          ),
+                        ],
+                      ),
+                      if (isReviewed) ...[
+                        const SizedBox(height: 8),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: AppColors.info.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(999),
+                              border: Border.all(
+                                color: AppColors.info.withValues(alpha: 0.35),
+                              ),
+                            ),
+                            child: Text(
+                              'You reviewed this',
+                              style: AppTextStyle.inputBox.copyWith(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w700,
+                                color: colorScheme.brightness == Brightness.dark
+                                    ? const Color(0xFFAFC0E0)
+                                    : AppColors.info,
+                              ),
+                            ),
                           ),
                         ),
+                      ],
+                      const SizedBox(height: 8),
+                      _info(
+                        icon: Icons.location_on_outlined,
+                        value: widget.shop.shopAddress,
                       ),
-                      SizedBox(
-                        width: 34,
-                        height: 34,
-                        child: isFavouriteBusy
-                            ? const Padding(
-                                padding: EdgeInsets.all(7),
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : IconButton(
-                                tooltip: isFavourite
-                                    ? 'Remove from favourites'
-                                    : 'Add to favourites',
-                                onPressed: () =>
-                                    _toggleFavouriteShop(reviewed: isReviewed),
-                                icon: Icon(
-                                  isFavourite
-                                      ? Icons.favorite
-                                      : Icons.favorite_border,
-                                  color: isFavourite
-                                      ? AppColors.error
-                                      : Colors.grey.shade600,
-                                ),
-                              ),
+                      _info(
+                        icon: Icons.phone_outlined,
+                        value: widget.shop.shopContact,
                       ),
-                      SizedBox(
-                        width: 34,
-                        height: 34,
-                        child: isSaveBusy
-                            ? const Padding(
-                                padding: EdgeInsets.all(7),
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                ),
-                              )
-                            : IconButton(
-                                tooltip: isSaved
-                                    ? 'Remove from saved'
-                                    : 'Save shop',
-                                onPressed: _toggleSaveShop,
-                                icon: Icon(
-                                  isSaved
-                                      ? Icons.bookmark
-                                      : Icons.bookmark_border,
-                                  color: isSaved
-                                      ? AppColors.primary
-                                      : Colors.grey.shade600,
-                                ),
-                              ),
-                      ),
+                      if ((widget.shop.email ?? '').isNotEmpty)
+                        _info(
+                          icon: Icons.mail_outline_rounded,
+                          value: widget.shop.email!,
+                        ),
                     ],
                   ),
-                  if (isReviewed) ...[
-                    const SizedBox(height: 8),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
-                          vertical: 4,
+                ),
+                if (_shopLocation != null) ...[
+                  const SizedBox(height: 12),
+                  ShopRouteMap(
+                    shopLocation: _shopLocation!,
+                    userLocation: _userLocation,
+                    route: _route,
+                  ),
+                  const SizedBox(height: 8),
+                  if (_route != null)
+                    Row(
+                      children: [
+                        _routeStat(
+                          icon: Icons.straighten_rounded,
+                          label: '${_route!.distanceKm} km',
                         ),
-                        decoration: BoxDecoration(
-                          color: AppColors.info.withValues(alpha: 0.12),
-                          borderRadius: BorderRadius.circular(999),
-                          border: Border.all(
-                            color: AppColors.info.withValues(alpha: 0.35),
-                          ),
+                        const SizedBox(width: 8),
+                        _routeStat(
+                          icon: Icons.timer_outlined,
+                          label: '${_route!.durationMin} min',
                         ),
-                        child: Text(
-                          'You reviewed this',
-                          style: AppTextStyle.inputBox.copyWith(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.info,
-                          ),
-                        ),
-                      ),
+                      ],
                     ),
+                  if (_route != null) ...[
+                    const SizedBox(height: 8),
+                    _compassHint(sensorState),
                   ],
                   const SizedBox(height: 8),
-                  _info(
-                    icon: Icons.location_on_outlined,
-                    value: widget.shop.shopAddress,
-                  ),
-                  _info(
-                    icon: Icons.phone_outlined,
-                    value: widget.shop.shopContact,
-                  ),
-                  if ((widget.shop.email ?? '').isNotEmpty)
-                    _info(
-                      icon: Icons.mail_outline_rounded,
-                      value: widget.shop.email!,
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: _isLoadingRoute ? null : _loadRouteToShop,
+                      icon: _isLoadingRoute
+                          ? const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            )
+                          : const Icon(Icons.near_me_rounded),
+                      label: Text(
+                        _route == null
+                            ? 'Navigate From My Location'
+                            : 'Refresh Route',
+                      ),
                     ),
+                  ),
                 ],
-              ),
-            ),
-            if (_shopLocation != null) ...[
-              const SizedBox(height: 12),
-              ShopRouteMap(
-                shopLocation: _shopLocation!,
-                userLocation: _userLocation,
-                route: _route,
-              ),
-              const SizedBox(height: 8),
-              if (_route != null)
-                Row(
-                  children: [
-                    _routeStat(
-                      icon: Icons.straighten_rounded,
-                      label: '${_route!.distanceKm} km',
-                    ),
-                    const SizedBox(width: 8),
-                    _routeStat(
-                      icon: Icons.timer_outlined,
-                      label: '${_route!.durationMin} min',
-                    ),
-                  ],
-                ),
-              if (_route != null) ...[
                 const SizedBox(height: 8),
-                _compassHint(sensorState),
-              ],
-              const SizedBox(height: 8),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: _isLoadingRoute ? null : _loadRouteToShop,
-                  icon: _isLoadingRoute
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.near_me_rounded),
-                  label: Text(
-                    _route == null
-                        ? 'Navigate From My Location'
-                        : 'Refresh Route',
+                const SizedBox(height: 12),
+                if (state.isLoading)
+                  const LinearProgressIndicator(minHeight: 2),
+                if ((state.errorMessage ?? '').isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    state.errorMessage!,
+                    style: AppTextStyle.minimalTexts.copyWith(
+                      fontSize: 12,
+                      color: AppColors.error,
+                    ),
                   ),
+                ],
+                const SizedBox(height: 8),
+                ShopDetailSection(
+                  detail: state.detail,
+                  canEdit: _isOwner,
+                  onEdit: _showDetailEditSheet,
                 ),
-              ),
-            ],
-            const SizedBox(height: 8),
-            const SizedBox(height: 12),
-            if (state.isLoading) const LinearProgressIndicator(minHeight: 2),
-            if ((state.errorMessage ?? '').isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Text(
-                state.errorMessage!,
-                style: AppTextStyle.minimalTexts.copyWith(
-                  fontSize: 12,
-                  color: AppColors.error,
+                ShopPhotosSection(
+                  photos: state.photos,
+                  canEdit: _isOwner,
+                  onAdd: _addPhoto,
+                  onUpdate: _updatePhoto,
+                  onDelete: _deletePhoto,
                 ),
-              ),
-            ],
-            const SizedBox(height: 8),
-            ShopDetailSection(
-              detail: state.detail,
-              canEdit: _isOwner,
-              onEdit: _showDetailEditSheet,
-            ),
-            ShopPhotosSection(
-              photos: state.photos,
-              canEdit: _isOwner,
-              onAdd: _addPhoto,
-              onUpdate: _updatePhoto,
-              onDelete: _deletePhoto,
-            ),
-            ShopReviewsSection(
-              reviews: state.reviews,
-              canAddReview: !_isOwner,
-              onAddReview: _isOwner ? null : _showReviewSheet,
-              canEditReview: _canEditReview,
-              onEditReview: _showEditReviewSheet,
-              onDeleteReview: _deleteReview,
-              isLiked: (review) =>
-                  review.reviewId != null &&
-                  state.likedReviewIds.contains(review.reviewId!),
-              isDisliked: (review) =>
-                  review.reviewId != null &&
-                  state.dislikedReviewIds.contains(review.reviewId!),
-              isReacting: (review) =>
-                  review.reviewId != null &&
-                  state.reactingReviewIds.contains(review.reviewId!),
-              onLike: (review) {
-                if (review.reviewId == null) return;
-                ref
-                    .read(shopContentViewModelProvider.notifier)
-                    .reactToReview(
-                      shopId: widget.shop.shopId ?? '',
-                      reviewId: review.reviewId!,
-                      isLike: true,
-                    );
-              },
-              onDislike: (review) {
-                if (review.reviewId == null) return;
-                ref
-                    .read(shopContentViewModelProvider.notifier)
-                    .reactToReview(
-                      shopId: widget.shop.shopId ?? '',
-                      reviewId: review.reviewId!,
-                      isLike: false,
-                    );
-              },
-            ),
+                ShopReviewsSection(
+                  reviews: state.reviews,
+                  canAddReview: !_isOwner,
+                  onAddReview: _isOwner ? null : _showReviewSheet,
+                  canEditReview: _canEditReview,
+                  onEditReview: _showEditReviewSheet,
+                  onDeleteReview: _deleteReview,
+                  isLiked: (review) =>
+                      review.reviewId != null &&
+                      state.likedReviewIds.contains(review.reviewId!),
+                  isDisliked: (review) =>
+                      review.reviewId != null &&
+                      state.dislikedReviewIds.contains(review.reviewId!),
+                  isReacting: (review) =>
+                      review.reviewId != null &&
+                      state.reactingReviewIds.contains(review.reviewId!),
+                  onLike: (review) {
+                    if (review.reviewId == null) return;
+                    ref
+                        .read(shopContentViewModelProvider.notifier)
+                        .reactToReview(
+                          shopId: widget.shop.shopId ?? '',
+                          reviewId: review.reviewId!,
+                          isLike: true,
+                        );
+                  },
+                  onDislike: (review) {
+                    if (review.reviewId == null) return;
+                    ref
+                        .read(shopContentViewModelProvider.notifier)
+                        .reactToReview(
+                          shopId: widget.shop.shopId ?? '',
+                          reviewId: review.reviewId!,
+                          isLike: false,
+                        );
+                  },
+                ),
               ],
             ),
           ),
@@ -914,16 +928,21 @@ class _ShopPublicDetailPageState extends ConsumerState<ShopPublicDetailPage> {
   }
 
   Widget _info({required IconData icon, required String value}) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
         children: [
-          Icon(icon, size: 18, color: AppColors.primary),
+          Icon(icon, size: 18, color: colorScheme.primary),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               value,
-              style: AppTextStyle.inputBox.copyWith(fontSize: 13),
+              style: AppTextStyle.inputBox.copyWith(
+                fontSize: 13,
+                color: colorScheme.onSurface,
+              ),
             ),
           ),
         ],
@@ -932,6 +951,7 @@ class _ShopPublicDetailPageState extends ConsumerState<ShopPublicDetailPage> {
   }
 
   Widget _compassHint(SensorState sensorState) {
+    final colorScheme = Theme.of(context).colorScheme;
     final bearing = _bearingToShopDegrees();
     if (bearing == null) {
       return const SizedBox.shrink();
@@ -944,9 +964,11 @@ class _ShopPublicDetailPageState extends ConsumerState<ShopPublicDetailPage> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F5EE),
+        color: colorScheme.primary.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.accent2),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.14),
+        ),
       ),
       child: Row(
         children: [
@@ -970,12 +992,16 @@ class _ShopPublicDetailPageState extends ConsumerState<ShopPublicDetailPage> {
   }
 
   Widget _routeStat({required IconData icon, required String label}) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F5EE),
+        color: colorScheme.primary.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.accent2),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.14),
+        ),
       ),
       child: Row(
         children: [
@@ -992,7 +1018,6 @@ class _ShopPublicDetailPageState extends ConsumerState<ShopPublicDetailPage> {
       ),
     );
   }
-
 }
 
 class _StarRatingInput extends StatelessWidget {

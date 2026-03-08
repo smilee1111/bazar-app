@@ -65,8 +65,10 @@ class _SettingsOptionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Material(
-      color: Colors.white,
+      color: colorScheme.surface,
       borderRadius: BorderRadius.circular(18),
       child: InkWell(
         borderRadius: BorderRadius.circular(18),
@@ -75,10 +77,12 @@ class _SettingsOptionTile extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: const Color(0xFFEAEAEA)),
-            boxShadow: const [
+            border: Border.all(
+              color: colorScheme.onSurface.withValues(alpha: 0.12),
+            ),
+            boxShadow: [
               BoxShadow(
-                color: Color(0x14000000),
+                color: colorScheme.primary.withValues(alpha: 0.08),
                 blurRadius: 10,
                 offset: Offset(0, 4),
               ),
@@ -89,10 +93,10 @@ class _SettingsOptionTile extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFF2EFE3),
+                  color: colorScheme.primary.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: Icon(icon, color: Colors.brown.shade700),
+                child: Icon(icon, color: colorScheme.primary),
               ),
               const SizedBox(width: 14),
               Expanded(
@@ -111,13 +115,16 @@ class _SettingsOptionTile extends StatelessWidget {
                       subtitle,
                       style: AppTextStyle.minimalTexts.copyWith(
                         fontSize: 13,
-                        color: Colors.grey.shade700,
+                        color: colorScheme.onSurface.withValues(alpha: 0.74),
                       ),
                     ),
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right_rounded, color: Colors.grey.shade500),
+              Icon(
+                Icons.chevron_right_rounded,
+                color: colorScheme.onSurface.withValues(alpha: 0.62),
+              ),
             ],
           ),
         ),

@@ -110,6 +110,8 @@ class _ShopFilterSheetState extends State<ShopFilterSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
@@ -126,7 +128,7 @@ class _ShopFilterSheetState extends State<ShopFilterSheet> {
                 width: 46,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: AppColors.accent2,
+                  color: colorScheme.onSurface.withValues(alpha: 0.28),
                   borderRadius: BorderRadius.circular(999),
                 ),
               ),
@@ -137,6 +139,7 @@ class _ShopFilterSheetState extends State<ShopFilterSheet> {
               style: AppTextStyle.inputBox.copyWith(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
+                color: colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 4),
@@ -144,7 +147,7 @@ class _ShopFilterSheetState extends State<ShopFilterSheet> {
               'Refine by category, location, price and rating.',
               style: AppTextStyle.minimalTexts.copyWith(
                 fontSize: 12,
-                color: AppColors.textSecondary,
+                color: colorScheme.onSurface.withValues(alpha: 0.74),
               ),
             ),
             const SizedBox(height: 14),
@@ -152,7 +155,10 @@ class _ShopFilterSheetState extends State<ShopFilterSheet> {
             // Category
             Text(
               'Category',
-              style: AppTextStyle.inputBox.copyWith(fontSize: 12),
+              style: AppTextStyle.inputBox.copyWith(
+                fontSize: 12,
+                color: colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 6),
             DropdownButtonFormField<String?>(
@@ -160,7 +166,7 @@ class _ShopFilterSheetState extends State<ShopFilterSheet> {
               style: AppTextStyle.inputBox.copyWith(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: colorScheme.onSurface,
               ),
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.category_outlined),
@@ -173,6 +179,7 @@ class _ShopFilterSheetState extends State<ShopFilterSheet> {
                     style: AppTextStyle.inputBox.copyWith(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -184,6 +191,7 @@ class _ShopFilterSheetState extends State<ShopFilterSheet> {
                       style: AppTextStyle.inputBox.copyWith(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -196,7 +204,10 @@ class _ShopFilterSheetState extends State<ShopFilterSheet> {
             // Location
             Text(
               'Location',
-              style: AppTextStyle.inputBox.copyWith(fontSize: 12),
+              style: AppTextStyle.inputBox.copyWith(
+                fontSize: 12,
+                color: colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 6),
             TextFormField(
@@ -211,7 +222,10 @@ class _ShopFilterSheetState extends State<ShopFilterSheet> {
             // Price range
             Text(
               'Price Range',
-              style: AppTextStyle.inputBox.copyWith(fontSize: 12),
+              style: AppTextStyle.inputBox.copyWith(
+                fontSize: 12,
+                color: colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 6),
             DropdownButtonFormField<PriceFilter>(
@@ -219,18 +233,40 @@ class _ShopFilterSheetState extends State<ShopFilterSheet> {
               style: AppTextStyle.inputBox.copyWith(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
-                color: AppColors.textPrimary,
+                color: colorScheme.onSurface,
               ),
               decoration: const InputDecoration(
                 prefixIcon: Icon(Icons.sell_outlined),
               ),
-              items: const [
-                DropdownMenuItem(value: PriceFilter.any, child: Text('Any')),
+              items: [
                 DropdownMenuItem(
-                    value: PriceFilter.budget, child: Text('Budget')),
-                DropdownMenuItem(value: PriceFilter.mid, child: Text('Mid')),
+                  value: PriceFilter.any,
+                  child: Text(
+                    'Any',
+                    style: TextStyle(color: colorScheme.onSurface),
+                  ),
+                ),
                 DropdownMenuItem(
-                    value: PriceFilter.premium, child: Text('Premium')),
+                  value: PriceFilter.budget,
+                  child: Text(
+                    'Budget',
+                    style: TextStyle(color: colorScheme.onSurface),
+                  ),
+                ),
+                DropdownMenuItem(
+                  value: PriceFilter.mid,
+                  child: Text(
+                    'Mid',
+                    style: TextStyle(color: colorScheme.onSurface),
+                  ),
+                ),
+                DropdownMenuItem(
+                  value: PriceFilter.premium,
+                  child: Text(
+                    'Premium',
+                    style: TextStyle(color: colorScheme.onSurface),
+                  ),
+                ),
               ],
               onChanged: (value) {
                 if (value != null) setState(() => _selectedPrice = value);
@@ -241,13 +277,15 @@ class _ShopFilterSheetState extends State<ShopFilterSheet> {
             // Min rating
             Text(
               'Minimum Rating',
-              style: AppTextStyle.inputBox.copyWith(fontSize: 12),
+              style: AppTextStyle.inputBox.copyWith(
+                fontSize: 12,
+                color: colorScheme.onSurface,
+              ),
             ),
             const SizedBox(height: 6),
             RatingStarSelector(
               selectedMinRating: _selectedMinRating,
-              onChanged: (value) =>
-                  setState(() => _selectedMinRating = value),
+              onChanged: (value) => setState(() => _selectedMinRating = value),
             ),
             const SizedBox(height: 20),
 
@@ -256,10 +294,8 @@ class _ShopFilterSheetState extends State<ShopFilterSheet> {
               children: [
                 Expanded(
                   child: OutlinedButton(
-                    onPressed: () => Navigator.pop(
-                      context,
-                      const ShopFilters(),
-                    ),
+                    onPressed: () =>
+                        Navigator.pop(context, const ShopFilters()),
                     child: const Text('Reset'),
                   ),
                 ),
@@ -341,19 +377,22 @@ class _RatingChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(999),
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: active
               ? AppColors.warning.withValues(alpha: 0.16)
-              : Colors.white,
+              : colorScheme.surface,
           borderRadius: BorderRadius.circular(999),
           border: Border.all(
-            color: active ? AppColors.warning : AppColors.border,
+            color: active
+                ? AppColors.warning
+                : colorScheme.onSurface.withValues(alpha: 0.14),
           ),
         ),
         child: Row(
@@ -372,6 +411,7 @@ class _RatingChip extends StatelessWidget {
               style: AppTextStyle.inputBox.copyWith(
                 fontSize: 11,
                 fontWeight: FontWeight.w600,
+                color: colorScheme.onSurface,
               ),
             ),
           ],

@@ -1,4 +1,4 @@
-﻿import 'package:bazar/app/theme/colors.dart';
+import 'package:bazar/app/theme/colors.dart';
 import 'package:bazar/app/theme/textstyle.dart';
 import 'package:bazar/core/utils/snackbar_utils.dart';
 import 'package:bazar/features/category/domain/entities/category_entity.dart';
@@ -71,6 +71,14 @@ class _HomescreenState extends ConsumerState<Homescreen> {
   }
 
   Future<void> _refreshFeeds({bool forceRefresh = true}) async {
+    // If nearest filter is on but no category selected, disable it
+    final shopState = ref.read(shopViewModelProvider);
+    if (shopState.showNearestOnly && shopState.selectedCategoryId == null) {
+      await ref
+          .read(shopViewModelProvider.notifier)
+          .toggleNearestFilter(enable: false);
+    }
+
     await Future.wait([
       ref
           .read(shopViewModelProvider.notifier)
@@ -128,11 +136,18 @@ class _HomescreenState extends ConsumerState<Homescreen> {
           (c) => c.categoryName == categoryName,
           orElse: () => _categories.first,
         );
-        ref.read(shopViewModelProvider.notifier).setSelectedCategory(
-          category.categoryId,
-        );
+        ref
+            .read(shopViewModelProvider.notifier)
+            .setSelectedCategory(category.categoryId);
       } else {
+        // When category is cleared, also disable nearest filter
         ref.read(shopViewModelProvider.notifier).setSelectedCategory(null);
+        final shopState = ref.read(shopViewModelProvider);
+        if (shopState.showNearestOnly) {
+          ref
+              .read(shopViewModelProvider.notifier)
+              .toggleNearestFilter(enable: false);
+        }
       }
     }
   }
@@ -141,10 +156,11 @@ class _HomescreenState extends ConsumerState<Homescreen> {
     final category = (_filters.categoryName ?? '').trim().toLowerCase();
     final location = _filters.locationQuery.trim().toLowerCase();
     final description = (shop.description ?? '').toLowerCase();
-    final haystack =
-        '${shop.shopName} ${shop.shopAddress} $description'.toLowerCase();
-    final categoryFromField =
-        shop.categoryNames.map((e) => e.toLowerCase()).toList();
+    final haystack = '${shop.shopName} ${shop.shopAddress} $description'
+        .toLowerCase();
+    final categoryFromField = shop.categoryNames
+        .map((e) => e.toLowerCase())
+        .toList();
     final matchesCategory =
         category.isEmpty ||
         categoryFromField.any((name) => name.contains(category)) ||
@@ -181,10 +197,18 @@ class _HomescreenState extends ConsumerState<Homescreen> {
     final text =
         '${shop.shopName} ${shop.description ?? ''} ${shop.shopAddress}'
             .toLowerCase();
-    final isBudget =
-        ['budget', 'cheap', 'affordable', 'low cost'].any(text.contains);
-    final isPremium =
-        ['premium', 'luxury', 'exclusive', 'high-end'].any(text.contains);
+    final isBudget = [
+      'budget',
+      'cheap',
+      'affordable',
+      'low cost',
+    ].any(text.contains);
+    final isPremium = [
+      'premium',
+      'luxury',
+      'exclusive',
+      'high-end',
+    ].any(text.contains);
     final isMid = ['mid', 'standard', 'moderate'].any(text.contains);
     switch (_filters.priceFilter) {
       case PriceFilter.budget:
@@ -212,6 +236,7 @@ class _HomescreenState extends ConsumerState<Homescreen> {
       }
     });
 
+    final colorScheme = Theme.of(context).colorScheme;
     final shopState = ref.watch(shopViewModelProvider);
     final shopViewModel = ref.read(shopViewModelProvider.notifier);
     final savedState = ref.watch(savedShopViewModelProvider);
@@ -350,10 +375,10 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                             orElse: () => true,
                           );
                     if (!ratingPass) return const SizedBox.shrink();
-                    
+
                     // Calculate distance if location is available
                     final distance = shopViewModel.calculateDistance(shop);
-                    
+
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 10),
                       child: PublicShopCard(
@@ -365,13 +390,16 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                             builder: (_) => ShopPublicDetailPage(shop: shop),
                           ),
                         ),
-                        isSaved: savedState.savedShopIds
-                            .contains(shop.shopId ?? ''),
-                        isFavourite: favouriteState.favouriteShopIds
-                            .contains(shop.shopId ?? ''),
+                        isSaved: savedState.savedShopIds.contains(
+                          shop.shopId ?? '',
+                        ),
+                        isFavourite: favouriteState.favouriteShopIds.contains(
+                          shop.shopId ?? '',
+                        ),
                         isReviewed: reviewedIds.contains(shop.shopId ?? ''),
-                        isSaveBusy: savedState.processingShopIds
-                            .contains(shop.shopId ?? ''),
+                        isSaveBusy: savedState.processingShopIds.contains(
+                          shop.shopId ?? '',
+                        ),
                         isFavouriteBusy: favouriteState.processingShopIds
                             .contains(shop.shopId ?? ''),
                         onToggleSave: () {
@@ -388,8 +416,9 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                               .read(favouriteViewModelProvider.notifier)
                               .toggleFavourite(
                                 shopId: shopId,
-                                isReviewed:
-                                    reviewedIds.contains(shopId) ? true : null,
+                                isReviewed: reviewedIds.contains(shopId)
+                                    ? true
+                                    : null,
                               );
                         },
                       ),
@@ -417,20 +446,24 @@ class _HomescreenState extends ConsumerState<Homescreen> {
                       ),
                     )
                   : (!shopState.hasMore && shopState.publicShops.isNotEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 16, horizontal: 16),
-                          child: Center(
-                            child: Text(
-                              "You've seen all shops",
-                              style: AppTextStyle.minimalTexts.copyWith(
-                                fontSize: 12,
-                                color: AppColors.accent,
+                        ? Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 16,
+                              horizontal: 16,
+                            ),
+                            child: Center(
+                              child: Text(
+                                "You've seen all shops",
+                                style: AppTextStyle.minimalTexts.copyWith(
+                                  fontSize: 12,
+                                  color: colorScheme.onSurface.withValues(
+                                    alpha: 0.72,
+                                  ),
+                                ),
                               ),
                             ),
-                          ),
-                        )
-                      : const SizedBox(height: 20)),
+                          )
+                        : const SizedBox(height: 20)),
             ),
           ],
         ),

@@ -217,7 +217,6 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
     });
 
     return Scaffold(
-      backgroundColor: AppColors.background,
       appBar: AppBar(
         title: const Text('My Profile'),
         automaticallyImplyLeading: false,

@@ -14,7 +14,8 @@ class NotificationListPage extends ConsumerStatefulWidget {
   const NotificationListPage({super.key});
 
   @override
-  ConsumerState<NotificationListPage> createState() => _NotificationListPageState();
+  ConsumerState<NotificationListPage> createState() =>
+      _NotificationListPageState();
 }
 
 class _NotificationListPageState extends ConsumerState<NotificationListPage> {
@@ -24,7 +25,9 @@ class _NotificationListPageState extends ConsumerState<NotificationListPage> {
   void initState() {
     super.initState();
     Future.microtask(() async {
-      await ref.read(notificationViewModelProvider.notifier).loadNotifications();
+      await ref
+          .read(notificationViewModelProvider.notifier)
+          .loadNotifications();
       await ref.read(notificationViewModelProvider.notifier).loadUnreadCount();
     });
     _scrollController.addListener(_onScroll);
@@ -82,6 +85,7 @@ class _NotificationListPageState extends ConsumerState<NotificationListPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final state = ref.watch(notificationViewModelProvider);
     final vm = ref.read(notificationViewModelProvider.notifier);
 
@@ -120,7 +124,7 @@ class _NotificationListPageState extends ConsumerState<NotificationListPage> {
                   '${state.unreadCount} unread',
                   style: AppTextStyle.minimalTexts.copyWith(
                     fontSize: 12,
-                    color: Colors.grey.shade700,
+                    color: colorScheme.onSurface.withValues(alpha: 0.74),
                   ),
                 ),
                 const Spacer(),
@@ -168,6 +172,8 @@ class _NotificationListPageState extends ConsumerState<NotificationListPage> {
   }
 
   Widget _buildBody(BuildContext context, NotificationState state) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     if (state.isLoading && state.notifications.isEmpty) {
       return ListView.builder(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -200,10 +206,7 @@ class _NotificationListPageState extends ConsumerState<NotificationListPage> {
     if (state.notifications.isEmpty) {
       return ListView(
         physics: const AlwaysScrollableScrollPhysics(),
-        children: const [
-          SizedBox(height: 100),
-          _EmptyState(),
-        ],
+        children: const [SizedBox(height: 100), _EmptyState()],
       );
     }
 
@@ -220,7 +223,9 @@ class _NotificationListPageState extends ConsumerState<NotificationListPage> {
         }
 
         final notification = state.notifications[index];
-        final section = NotificationUiUtils.sectionLabel(notification.createdAt);
+        final section = NotificationUiUtils.sectionLabel(
+          notification.createdAt,
+        );
         final prevSection = index == 0
             ? null
             : NotificationUiUtils.sectionLabel(
@@ -238,7 +243,7 @@ class _NotificationListPageState extends ConsumerState<NotificationListPage> {
                   section,
                   style: AppTextStyle.inputBox.copyWith(
                     fontSize: 12,
-                    color: Colors.grey.shade700,
+                    color: colorScheme.onSurface.withValues(alpha: 0.74),
                   ),
                 ),
               ),
@@ -254,7 +259,10 @@ class _NotificationListPageState extends ConsumerState<NotificationListPage> {
                     color: AppColors.error.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(14),
                   ),
-                  child: const Icon(Icons.delete_outline_rounded, color: AppColors.error),
+                  child: const Icon(
+                    Icons.delete_outline_rounded,
+                    color: AppColors.error,
+                  ),
                 ),
                 confirmDismiss: (_) async {
                   HapticFeedback.lightImpact();
@@ -268,8 +276,9 @@ class _NotificationListPageState extends ConsumerState<NotificationListPage> {
                   if (ok) {
                     SnackbarUtils.showSuccess(context, 'Notification deleted');
                   } else {
-                    final msg =
-                        ref.read(notificationViewModelProvider).errorMessage;
+                    final msg = ref
+                        .read(notificationViewModelProvider)
+                        .errorMessage;
                     if ((msg ?? '').isNotEmpty) {
                       SnackbarUtils.showError(context, msg!);
                     }
@@ -292,8 +301,9 @@ class _NotificationListPageState extends ConsumerState<NotificationListPage> {
                               .markAsRead(notification.id);
                           if (!mounted) return;
                           if (!ok) {
-                            final msg =
-                                ref.read(notificationViewModelProvider).errorMessage;
+                            final msg = ref
+                                .read(notificationViewModelProvider)
+                                .errorMessage;
                             if ((msg ?? '').isNotEmpty) {
                               SnackbarUtils.showError(context, msg!);
                             }
@@ -306,10 +316,16 @@ class _NotificationListPageState extends ConsumerState<NotificationListPage> {
                         .deleteNotification(notification.id);
                     if (!mounted) return;
                     if (ok) {
-                      SnackbarUtils.showSuccess(context, 'Notification deleted');
+                      SnackbarUtils.showSuccess(
+                        context,
+                        'Notification deleted',
+                      );
                     } else {
-                      final msg = ref.read(notificationViewModelProvider).errorMessage;
-                      if ((msg ?? '').isNotEmpty) SnackbarUtils.showError(context, msg!);
+                      final msg = ref
+                          .read(notificationViewModelProvider)
+                          .errorMessage;
+                      if ((msg ?? '').isNotEmpty)
+                        SnackbarUtils.showError(context, msg!);
                     }
                   },
                 ),
@@ -330,6 +346,7 @@ class _FilterTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final tabs = [
       (NotificationReadFilter.all, 'All'),
       (NotificationReadFilter.unread, 'Unread'),
@@ -348,10 +365,12 @@ class _FilterTabs extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: active
                       ? AppColors.primary.withValues(alpha: 0.12)
-                      : Colors.white,
+                      : colorScheme.surface,
                   borderRadius: BorderRadius.circular(999),
                   border: Border.all(
-                    color: active ? AppColors.primary : AppColors.accent2,
+                    color: active
+                        ? AppColors.primary
+                        : colorScheme.onSurface.withValues(alpha: 0.14),
                   ),
                 ),
                 child: InkWell(
@@ -364,7 +383,9 @@ class _FilterTabs extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: AppTextStyle.inputBox.copyWith(
                         fontSize: 12,
-                        color: active ? AppColors.primary : Colors.black87,
+                        color: active
+                            ? AppColors.primary
+                            : colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -383,14 +404,18 @@ class _EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: colorScheme.surface,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: AppColors.accent2),
+          border: Border.all(
+            color: colorScheme.onSurface.withValues(alpha: 0.14),
+          ),
         ),
         child: Column(
           children: [
@@ -413,6 +438,7 @@ class _EmptyState extends StatelessWidget {
               style: AppTextStyle.inputBox.copyWith(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
+                color: colorScheme.onSurface,
               ),
             ),
           ],
@@ -427,12 +453,16 @@ class _NotificationSkeleton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       height: 88,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.accent2),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.14),
+        ),
       ),
     );
   }

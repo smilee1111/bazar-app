@@ -31,23 +31,23 @@ class HomeStatusCard extends StatelessWidget {
 }
 
 class HomeEmptyState extends StatelessWidget {
-  const HomeEmptyState({
-    super.key,
-    required this.query,
-    required this.onClear,
-  });
+  const HomeEmptyState({super.key, required this.query, required this.onClear});
 
   final String query;
   final VoidCallback onClear;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.14),
+        ),
       ),
       child: Column(
         children: [
@@ -70,6 +70,7 @@ class HomeEmptyState extends StatelessWidget {
             style: AppTextStyle.inputBox.copyWith(
               fontSize: 16,
               fontWeight: FontWeight.w700,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 6),
@@ -80,7 +81,7 @@ class HomeEmptyState extends StatelessWidget {
             textAlign: TextAlign.center,
             style: AppTextStyle.minimalTexts.copyWith(
               fontSize: 12,
-              color: AppColors.textSecondary,
+              color: colorScheme.onSurface.withValues(alpha: 0.74),
             ),
           ),
           if (query.isNotEmpty) ...[

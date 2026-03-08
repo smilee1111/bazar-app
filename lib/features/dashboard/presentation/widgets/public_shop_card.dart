@@ -34,6 +34,7 @@ class PublicShopCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final colorScheme = Theme.of(context).colorScheme;
     final previewState = ref.watch(shopCardPreviewProvider(shop));
     final preview = previewState.maybeWhen(
       data: (value) => value,
@@ -41,7 +42,7 @@ class PublicShopCard extends ConsumerWidget {
     );
 
     return Material(
-      color: Colors.white,
+      color: colorScheme.surface,
       borderRadius: BorderRadius.circular(16),
       elevation: 0,
       child: InkWell(
@@ -50,12 +51,14 @@ class PublicShopCard extends ConsumerWidget {
         child: Container(
           padding: const EdgeInsets.all(14),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.border),
+            border: Border.all(
+              color: colorScheme.onSurface.withValues(alpha: 0.14),
+            ),
             boxShadow: [
               BoxShadow(
-                color: AppColors.darkBrown.withValues(alpha: 0.05),
+                color: colorScheme.primary.withValues(alpha: 0.08),
                 blurRadius: 16,
                 offset: const Offset(0, 8),
               ),
@@ -72,6 +75,7 @@ class PublicShopCard extends ConsumerWidget {
                       style: AppTextStyle.inputBox.copyWith(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                   ),
@@ -96,7 +100,7 @@ class PublicShopCard extends ConsumerWidget {
                   ),
                   Icon(
                     Icons.chevron_right_rounded,
-                    color: AppColors.textSecondary.withValues(alpha: 0.65),
+                    color: colorScheme.onSurface.withValues(alpha: 0.65),
                   ),
                 ],
               ),
@@ -137,7 +141,7 @@ class PublicShopCard extends ConsumerWidget {
                 shop.shopAddress,
                 style: AppTextStyle.minimalTexts.copyWith(
                   fontSize: 12,
-                  color: AppColors.textSecondary,
+                  color: colorScheme.onSurface.withValues(alpha: 0.78),
                 ),
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
@@ -148,7 +152,7 @@ class PublicShopCard extends ConsumerWidget {
                   shop.description!.trim(),
                   style: AppTextStyle.minimalTexts.copyWith(
                     fontSize: 11,
-                    color: AppColors.textSecondary.withValues(alpha: 0.92),
+                    color: colorScheme.onSurface.withValues(alpha: 0.74),
                   ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -158,16 +162,19 @@ class PublicShopCard extends ConsumerWidget {
                 const SizedBox(height: 6),
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.link_rounded,
                       size: 14,
-                      color: AppColors.primary,
+                      color: colorScheme.primary,
                     ),
                     const SizedBox(width: 4),
                     Expanded(
                       child: Text(
                         preview.detailSnippet!,
-                        style: AppTextStyle.inputBox.copyWith(fontSize: 11),
+                        style: AppTextStyle.inputBox.copyWith(
+                          fontSize: 11,
+                          color: colorScheme.onSurface,
+                        ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -180,16 +187,19 @@ class PublicShopCard extends ConsumerWidget {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.phone_outlined,
                     size: 16,
-                    color: AppColors.primary,
+                    color: colorScheme.primary,
                   ),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
                       shop.shopContact,
-                      style: AppTextStyle.inputBox.copyWith(fontSize: 12),
+                      style: AppTextStyle.inputBox.copyWith(
+                        fontSize: 12,
+                        color: colorScheme.onSurface,
+                      ),
                     ),
                   ),
                 ],
@@ -209,20 +219,24 @@ class _PreviewPhotos extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     if (photoUrls.isEmpty) {
       return Container(
         height: 74,
         decoration: BoxDecoration(
-          color: AppColors.surfaceStrong,
+          color: colorScheme.primary.withValues(alpha: 0.10),
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: AppColors.border),
+          border: Border.all(
+            color: colorScheme.onSurface.withValues(alpha: 0.14),
+          ),
         ),
         alignment: Alignment.center,
         child: Text(
           'No photos yet',
           style: AppTextStyle.minimalTexts.copyWith(
             fontSize: 11,
-            color: AppColors.textSecondary,
+            color: colorScheme.onSurface.withValues(alpha: 0.75),
           ),
         ),
       );
@@ -237,9 +251,11 @@ class _PreviewPhotos extends StatelessWidget {
             child: Container(
               margin: EdgeInsets.only(right: index == 2 ? 0 : 6),
               decoration: BoxDecoration(
-                color: AppColors.surfaceStrong,
+                color: colorScheme.primary.withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(10),
-                border: Border.all(color: AppColors.border),
+                border: Border.all(
+                  color: colorScheme.onSurface.withValues(alpha: 0.14),
+                ),
               ),
               clipBehavior: Clip.antiAlias,
               child: hasImage
@@ -262,14 +278,12 @@ class _PhotoPlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
-      color: AppColors.cream,
+      color: colorScheme.primary.withValues(alpha: 0.10),
       alignment: Alignment.center,
-      child: const Icon(
-        Icons.photo_outlined,
-        size: 18,
-        color: AppColors.primary,
-      ),
+      child: Icon(Icons.photo_outlined, size: 18, color: colorScheme.primary),
     );
   }
 }
@@ -282,6 +296,8 @@ class _RatingBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -300,7 +316,9 @@ class _RatingBadge extends StatelessWidget {
             style: AppTextStyle.inputBox.copyWith(
               fontSize: 10,
               fontWeight: FontWeight.w700,
-              color: AppColors.warning,
+              color: colorScheme.brightness == Brightness.dark
+                  ? const Color(0xFFFFD487)
+                  : AppColors.warning,
             ),
           ),
         ],
@@ -315,18 +333,23 @@ class _MetaTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.surfaceStrong,
+        color: colorScheme.primary.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(999),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.14),
+        ),
       ),
       child: Text(
         label,
         style: AppTextStyle.inputBox.copyWith(
           fontSize: 10,
           fontWeight: FontWeight.w600,
+          color: colorScheme.onSurface,
         ),
       ),
     );
@@ -352,6 +375,8 @@ class _ActionIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return SizedBox(
       width: 28,
       height: 28,
@@ -368,7 +393,9 @@ class _ActionIcon extends StatelessWidget {
               icon: Icon(
                 icon,
                 size: 18,
-                color: isActive ? activeColor : AppColors.textSecondary,
+                color: isActive
+                    ? activeColor
+                    : colorScheme.onSurface.withValues(alpha: 0.62),
               ),
             ),
     );
@@ -380,6 +407,8 @@ class _ReviewedTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -392,7 +421,9 @@ class _ReviewedTag extends StatelessWidget {
         style: AppTextStyle.inputBox.copyWith(
           fontSize: 10,
           fontWeight: FontWeight.w700,
-          color: AppColors.info,
+          color: colorScheme.brightness == Brightness.dark
+              ? const Color(0xFFAFC0E0)
+              : AppColors.info,
         ),
       ),
     );

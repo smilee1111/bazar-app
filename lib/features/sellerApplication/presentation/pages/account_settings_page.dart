@@ -50,6 +50,7 @@ class _AccountSettingsPageState extends ConsumerState<AccountSettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final state = ref.watch(sellerApplicationViewModelProvider);
     final app = state.application;
 
@@ -77,7 +78,7 @@ class _AccountSettingsPageState extends ConsumerState<AccountSettingsPage> {
               'Upgrade your account to start selling. Track your application status here.',
               style: AppTextStyle.minimalTexts.copyWith(
                 fontSize: 13,
-                color: Colors.grey.shade700,
+                color: colorScheme.onSurface.withValues(alpha: 0.74),
               ),
             ),
             const SizedBox(height: 16),
@@ -185,12 +186,16 @@ class _NoApplicationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFEAEAEA)),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.12),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -207,7 +212,7 @@ class _NoApplicationCard extends StatelessWidget {
             'Submit your business details for verification.',
             style: AppTextStyle.minimalTexts.copyWith(
               fontSize: 13,
-              color: Colors.grey.shade700,
+              color: colorScheme.onSurface.withValues(alpha: 0.74),
             ),
           ),
           const SizedBox(height: 14),
@@ -239,12 +244,16 @@ class _InfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFEAEAEA)),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.12),
+        ),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -267,7 +276,7 @@ class _InfoCard extends StatelessWidget {
                   body,
                   style: AppTextStyle.minimalTexts.copyWith(
                     fontSize: 13,
-                    color: Colors.grey.shade700,
+                    color: colorScheme.onSurface.withValues(alpha: 0.74),
                   ),
                 ),
               ],
@@ -313,12 +322,16 @@ class _ApplicationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final statusColor = _statusColor(application.status);
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: const Color(0xFFEAEAEA)),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.12),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -375,6 +388,8 @@ class _InfoRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -386,7 +401,7 @@ class _InfoRow extends StatelessWidget {
               '$label:',
               style: AppTextStyle.minimalTexts.copyWith(
                 fontSize: 13,
-                color: Colors.grey.shade700,
+                color: colorScheme.onSurface.withValues(alpha: 0.74),
               ),
             ),
           ),

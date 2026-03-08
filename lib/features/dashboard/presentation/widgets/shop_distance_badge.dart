@@ -4,10 +4,7 @@ import 'package:flutter/material.dart';
 
 /// Widget to display distance from user's location to a shop
 class ShopDistanceBadge extends StatelessWidget {
-  const ShopDistanceBadge({
-    super.key,
-    required this.distanceInKm,
-  });
+  const ShopDistanceBadge({super.key, required this.distanceInKm});
 
   final double? distanceInKm;
 
@@ -23,35 +20,31 @@ class ShopDistanceBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     if (distanceInKm == null) {
       return const SizedBox.shrink();
     }
 
+    final toneColor = colorScheme.primary;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.12),
+        color: toneColor.withValues(alpha: 0.16),
         borderRadius: BorderRadius.circular(6),
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.3),
-          width: 1,
-        ),
+        border: Border.all(color: toneColor.withValues(alpha: 0.48), width: 1),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.near_me_rounded,
-            size: 12,
-            color: AppColors.primary,
-          ),
+          Icon(Icons.near_me_rounded, size: 12, color: toneColor),
           const SizedBox(width: 4),
           Text(
             _formatDistance(distanceInKm!),
             style: AppTextStyle.inputBox.copyWith(
               fontSize: 11,
               fontWeight: FontWeight.w600,
-              color: AppColors.primary,
+              color: toneColor,
             ),
           ),
         ],

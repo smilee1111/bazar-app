@@ -10,17 +10,21 @@ class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return AppBar(
-      backgroundColor: AppColors.surface,
+      backgroundColor: colorScheme.surface,
       surfaceTintColor: Colors.transparent,
       leadingWidth: 60,
       leading: Padding(
         padding: const EdgeInsets.only(left: 12),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: AppColors.border),
+            border: Border.all(
+              color: colorScheme.onSurface.withValues(alpha: 0.14),
+            ),
           ),
           padding: const EdgeInsets.all(6),
           child: Image.asset(

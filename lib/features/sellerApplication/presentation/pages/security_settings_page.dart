@@ -6,6 +6,8 @@ class SecuritySettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Security')),
       body: ListView(
@@ -23,7 +25,7 @@ class SecuritySettingsPage extends StatelessWidget {
             'These controls improve account protection. Some options are reserved for a future backend update.',
             style: AppTextStyle.minimalTexts.copyWith(
               fontSize: 13,
-              color: Colors.grey.shade700,
+              color: colorScheme.onSurface.withValues(alpha: 0.74),
             ),
           ),
           const SizedBox(height: 14),
@@ -63,22 +65,26 @@ class _SecurityOptionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFEAEAEA)),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.12),
+        ),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: const Color(0xFFF2EFE3),
+              color: colorScheme.primary.withValues(alpha: 0.12),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: Colors.brown.shade700),
+            child: Icon(icon, color: colorScheme.primary),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -97,7 +103,7 @@ class _SecurityOptionTile extends StatelessWidget {
                   subtitle,
                   style: AppTextStyle.minimalTexts.copyWith(
                     fontSize: 12,
-                    color: Colors.grey.shade700,
+                    color: colorScheme.onSurface.withValues(alpha: 0.74),
                   ),
                 ),
               ],
