@@ -15,35 +15,79 @@ ThemeData getApplicationTheme() {
     onSurface: AppColors.onSurface,
   );
 
+  return _buildTheme(
+    colorScheme: colorScheme,
+    scaffoldBackgroundColor: AppColors.background,
+  );
+}
+
+ThemeData getApplicationDarkTheme() {
+  const darkSurface = Color(0xFF221B16);
+  const darkBackground = Color(0xFF171310);
+  const onDarkSurface = Color(0xFFF3E9DC);
+
+  final colorScheme = const ColorScheme(
+    brightness: Brightness.dark,
+    primary: AppColors.lightBrown,
+    onPrimary: Color(0xFF2E1F12),
+    secondary: AppColors.iconAccent,
+    onSecondary: Color(0xFF2E1F12),
+    error: Color(0xFFE58F86),
+    onError: Color(0xFF2B1210),
+    surface: darkSurface,
+    onSurface: onDarkSurface,
+  );
+
+  return _buildTheme(
+    colorScheme: colorScheme,
+    scaffoldBackgroundColor: darkBackground,
+  );
+}
+
+ThemeData _buildTheme({
+  required ColorScheme colorScheme,
+  required Color scaffoldBackgroundColor,
+}) {
+  final isDark = colorScheme.brightness == Brightness.dark;
+  final borderColor = isDark ? const Color(0xFF3B322C) : AppColors.border;
+  final surfaceStrong = isDark
+      ? const Color(0xFF2A221C)
+      : AppColors.surfaceStrong;
+  final iconOnSurface = isDark ? AppColors.lightBrown : AppColors.primary;
+  final bottomBarColor = isDark ? const Color(0xFF211912) : AppColors.darkBrown;
+  final inactiveBottomLabelColor = isDark
+      ? const Color(0xFFEAD7C2).withValues(alpha: 0.72)
+      : AppColors.cream.withValues(alpha: 0.86);
+
   return ThemeData(
     useMaterial3: true,
     colorScheme: colorScheme,
     fontFamily: 'Poppins',
-    primaryColor: AppColors.primary,
-    scaffoldBackgroundColor: AppColors.background,
-    splashColor: AppColors.primary.withValues(alpha: 0.08),
-    highlightColor: AppColors.primary.withValues(alpha: 0.03),
+    primaryColor: colorScheme.primary,
+    scaffoldBackgroundColor: scaffoldBackgroundColor,
+    splashColor: colorScheme.primary.withValues(alpha: 0.08),
+    highlightColor: colorScheme.primary.withValues(alpha: 0.03),
     hoverColor: Colors.transparent,
     appBarTheme: AppBarTheme(
-      backgroundColor: AppColors.surface,
-      foregroundColor: AppColors.textPrimary,
+      backgroundColor: colorScheme.surface,
+      foregroundColor: colorScheme.onSurface,
       centerTitle: false,
       elevation: 0,
       scrolledUnderElevation: 0,
-      iconTheme: const IconThemeData(color: AppColors.primary, size: 22),
-      titleTextStyle: const TextStyle(
+      iconTheme: IconThemeData(color: iconOnSurface, size: 22),
+      titleTextStyle: TextStyle(
         fontFamily: 'Poppins',
         fontSize: 20,
         fontWeight: FontWeight.w700,
-        color: AppColors.textPrimary,
+        color: colorScheme.onSurface,
       ),
     ),
     cardTheme: CardThemeData(
-      color: Colors.white,
+      color: colorScheme.surface,
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(18),
-        side: const BorderSide(color: AppColors.border),
+        side: BorderSide(color: borderColor),
       ),
     ),
 
@@ -51,55 +95,55 @@ ThemeData getApplicationTheme() {
       style: ElevatedButton.styleFrom(
         minimumSize: const Size(double.infinity, 52),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(14),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(14)),
         textStyle: AppTextStyle.buttonText.copyWith(fontSize: 16),
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.onPrimary,
+        backgroundColor: colorScheme.primary,
+        foregroundColor: colorScheme.onPrimary,
         elevation: 0,
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData(
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(double.infinity, 50),
-        foregroundColor: AppColors.primary,
-        side: const BorderSide(color: AppColors.accent),
+        foregroundColor: colorScheme.primary,
+        side: BorderSide(color: colorScheme.primary.withValues(alpha: 0.65)),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         textStyle: AppTextStyle.inputBox.copyWith(
           fontSize: 14,
           fontWeight: FontWeight.w600,
+          color: colorScheme.primary,
         ),
       ),
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        foregroundColor: AppColors.secondary,
+        foregroundColor: colorScheme.secondary,
         textStyle: AppTextStyle.minimalTexts.copyWith(
           fontSize: 13,
           decoration: TextDecoration.underline,
           fontWeight: FontWeight.w500,
+          color: colorScheme.secondary,
         ),
       ),
     ),
 
-    textTheme: const TextTheme(
+    textTheme: TextTheme(
       titleLarge: TextStyle(
         fontFamily: 'Poppins',
-        color: AppColors.textPrimary,
+        color: colorScheme.onSurface,
         fontWeight: FontWeight.w700,
       ),
-      bodyLarge: TextStyle(fontFamily: 'Poppins', color: AppColors.textPrimary),
+      bodyLarge: TextStyle(fontFamily: 'Poppins', color: colorScheme.onSurface),
       bodyMedium: TextStyle(
         fontFamily: 'Poppins',
-        color: AppColors.textSecondary,
+        color: colorScheme.onSurface.withValues(alpha: 0.75),
       ),
     ),
 
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: AppColors.darkBrown,
-      selectedItemColor: AppColors.iconAccent,
-      unselectedItemColor: AppColors.cream.withValues(alpha: 0.86),
+      backgroundColor: bottomBarColor,
+      selectedItemColor: colorScheme.secondary,
+      unselectedItemColor: inactiveBottomLabelColor,
       selectedIconTheme: const IconThemeData(size: 24),
       unselectedIconTheme: const IconThemeData(size: 22),
       type: BottomNavigationBarType.fixed,
@@ -108,41 +152,41 @@ ThemeData getApplicationTheme() {
       unselectedLabelStyle: AppTextStyle.bottomnav.copyWith(fontSize: 11),
     ),
     chipTheme: ChipThemeData(
-      backgroundColor: AppColors.surfaceStrong,
-      selectedColor: AppColors.iconAccent.withValues(alpha: 0.2),
+      backgroundColor: surfaceStrong,
+      selectedColor: colorScheme.secondary.withValues(alpha: 0.2),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(999)),
-      side: const BorderSide(color: AppColors.border),
+      side: BorderSide(color: borderColor),
       labelStyle: AppTextStyle.inputBox.copyWith(fontSize: 12),
       secondaryLabelStyle: AppTextStyle.inputBox.copyWith(fontSize: 12),
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
-      fillColor: Colors.white,
+      fillColor: colorScheme.surface,
       contentPadding: const EdgeInsets.symmetric(horizontal: 15, vertical: 14),
       labelStyle: AppTextStyle.minimalTexts.copyWith(
-        color: AppColors.textPrimary,
+        color: colorScheme.onSurface,
         fontSize: 13,
       ),
       hintStyle: AppTextStyle.minimalTexts.copyWith(
-        color: AppColors.textSecondary.withValues(alpha: 0.72),
+        color: colorScheme.onSurface.withValues(alpha: 0.62),
         fontSize: 12,
       ),
-      prefixIconColor: AppColors.secondary,
-      suffixIconColor: AppColors.secondary,
+      prefixIconColor: colorScheme.secondary,
+      suffixIconColor: colorScheme.secondary,
       enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: AppColors.border, width: 1.2),
+        borderSide: BorderSide(color: borderColor, width: 1.2),
         borderRadius: BorderRadius.circular(12),
       ),
       focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: AppColors.primary, width: 1.6),
+        borderSide: BorderSide(color: colorScheme.primary, width: 1.6),
         borderRadius: BorderRadius.circular(12),
       ),
       errorBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: AppColors.error, width: 1.2),
+        borderSide: BorderSide(color: colorScheme.error, width: 1.2),
         borderRadius: BorderRadius.circular(12),
       ),
       focusedErrorBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: AppColors.error, width: 1.4),
+        borderSide: BorderSide(color: colorScheme.error, width: 1.4),
         borderRadius: BorderRadius.circular(12),
       ),
     ),

@@ -22,10 +22,11 @@ class NotificationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final iconColor = NotificationUiUtils.iconColorForType(notification.type);
     final tileColor = notification.isRead
-        ? Colors.white
-        : const Color(0xFFF3F8FF).withValues(alpha: 0.95);
+        ? colorScheme.surface
+        : colorScheme.primary.withValues(alpha: 0.10);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 240),
@@ -34,7 +35,9 @@ class NotificationItem extends StatelessWidget {
         color: tileColor,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: notification.isRead ? AppColors.accent2 : const Color(0xFFD6E7FF),
+          color: notification.isRead
+              ? colorScheme.onSurface.withValues(alpha: 0.14)
+              : colorScheme.primary.withValues(alpha: 0.35),
         ),
       ),
       child: InkWell(
@@ -72,6 +75,7 @@ class NotificationItem extends StatelessWidget {
                         fontWeight: notification.isRead
                             ? FontWeight.w600
                             : FontWeight.w700,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -81,7 +85,7 @@ class NotificationItem extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyle.minimalTexts.copyWith(
                         fontSize: 12,
-                        color: Colors.grey.shade700,
+                        color: colorScheme.onSurface.withValues(alpha: 0.76),
                         fontWeight: FontWeight.w400,
                       ),
                     ),
@@ -89,10 +93,14 @@ class NotificationItem extends StatelessWidget {
                     Row(
                       children: [
                         Text(
-                          NotificationUiUtils.relativeTime(notification.createdAt),
+                          NotificationUiUtils.relativeTime(
+                            notification.createdAt,
+                          ),
                           style: AppTextStyle.minimalTexts.copyWith(
                             fontSize: 11,
-                            color: Colors.grey.shade600,
+                            color: colorScheme.onSurface.withValues(
+                              alpha: 0.68,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),

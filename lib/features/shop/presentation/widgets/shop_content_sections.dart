@@ -21,6 +21,7 @@ class ShopDetailSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final links = <String>[
       detail?.link1 ?? '',
       detail?.link2 ?? '',
@@ -42,7 +43,7 @@ class ShopDetailSection extends StatelessWidget {
               'No additional links available.',
               style: AppTextStyle.minimalTexts.copyWith(
                 fontSize: 12,
-                color: Colors.grey.shade700,
+                color: colorScheme.onSurface.withValues(alpha: 0.74),
               ),
             )
           : Column(
@@ -53,16 +54,19 @@ class ShopDetailSection extends StatelessWidget {
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.link_rounded,
                         size: 16,
-                        color: AppColors.primary,
+                        color: colorScheme.primary,
                       ),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           links[index],
-                          style: AppTextStyle.inputBox.copyWith(fontSize: 12),
+                          style: AppTextStyle.inputBox.copyWith(
+                            fontSize: 12,
+                            color: colorScheme.onSurface,
+                          ),
                         ),
                       ),
                     ],
@@ -92,6 +96,7 @@ class ShopPhotosSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return _SectionCard(
       title: 'Photos',
       trailing: canEdit
@@ -117,7 +122,7 @@ class ShopPhotosSection extends StatelessWidget {
               'No photos uploaded yet.',
               style: AppTextStyle.minimalTexts.copyWith(
                 fontSize: 12,
-                color: Colors.grey.shade700,
+                color: colorScheme.onSurface.withValues(alpha: 0.74),
               ),
             )
           : SizedBox(
@@ -132,9 +137,11 @@ class ShopPhotosSection extends StatelessWidget {
                   return Container(
                     width: 190,
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: colorScheme.surface,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.accent2),
+                      border: Border.all(
+                        color: colorScheme.onSurface.withValues(alpha: 0.14),
+                      ),
                     ),
                     child: Stack(
                       children: [
@@ -179,6 +186,8 @@ class ShopPhotosSection extends StatelessWidget {
   }
 
   void _openPhotoManagerSheet(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     showModalBottomSheet<void>(
       context: context,
       builder: (_) => SafeArea(
@@ -191,6 +200,7 @@ class ShopPhotosSection extends StatelessWidget {
               style: AppTextStyle.inputBox.copyWith(
                 fontSize: 15,
                 fontWeight: FontWeight.w700,
+                color: colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 8),
@@ -201,7 +211,10 @@ class ShopPhotosSection extends StatelessWidget {
                   photo.photoName,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyle.inputBox.copyWith(fontSize: 12),
+                  style: AppTextStyle.inputBox.copyWith(
+                    fontSize: 12,
+                    color: colorScheme.onSurface,
+                  ),
                 ),
                 trailing: Wrap(
                   spacing: 6,
@@ -264,6 +277,7 @@ class ShopReviewsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return _SectionCard(
       title: 'Reviews',
       trailing: canAddReview && onAddReview != null
@@ -278,7 +292,7 @@ class ShopReviewsSection extends StatelessWidget {
               'No reviews yet. Be the first to review.',
               style: AppTextStyle.minimalTexts.copyWith(
                 fontSize: 12,
-                color: Colors.grey.shade700,
+                color: colorScheme.onSurface.withValues(alpha: 0.74),
               ),
             )
           : Column(
@@ -334,6 +348,7 @@ class _ReviewTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final reviewerName = _resolveReviewerName(review);
     final reviewerRole = _resolveReviewerRole(review);
     final reviewedDateText = _resolveReviewedDateText(review);
@@ -351,9 +366,11 @@ class _ReviewTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F7F2),
+        color: colorScheme.primary.withValues(alpha: 0.10),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.accent2),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.14),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -379,6 +396,7 @@ class _ReviewTile extends StatelessWidget {
                             style: AppTextStyle.inputBox.copyWith(
                               fontSize: 13,
                               fontWeight: FontWeight.w700,
+                              color: colorScheme.onSurface,
                             ),
                           ),
                           if (reviewerSubtitle.isNotEmpty)
@@ -388,7 +406,9 @@ class _ReviewTile extends StatelessWidget {
                               overflow: TextOverflow.ellipsis,
                               style: AppTextStyle.minimalTexts.copyWith(
                                 fontSize: 11,
-                                color: Colors.grey.shade700,
+                                color: colorScheme.onSurface.withValues(
+                                  alpha: 0.74,
+                                ),
                               ),
                             ),
                         ],
@@ -417,6 +437,7 @@ class _ReviewTile extends StatelessWidget {
             style: AppTextStyle.inputBox.copyWith(
               fontSize: 13,
               fontWeight: FontWeight.w700,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 8),
@@ -450,21 +471,21 @@ class _ReviewTile extends StatelessWidget {
 }
 
 class _ReviewerAvatar extends StatelessWidget {
-  const _ReviewerAvatar({
-    required this.name,
-    required this.photoUrl,
-  });
+  const _ReviewerAvatar({required this.name, required this.photoUrl});
 
   final String name;
   final String? photoUrl;
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final trimmed = name.trim();
-    final letter = trimmed.isEmpty ? 'R' : trimmed.substring(0, 1).toUpperCase();
+    final letter = trimmed.isEmpty
+        ? 'R'
+        : trimmed.substring(0, 1).toUpperCase();
     return CircleAvatar(
       radius: 18,
-      backgroundColor: AppColors.accent2,
+      backgroundColor: colorScheme.primary.withValues(alpha: 0.30),
       foregroundImage: (photoUrl != null && photoUrl!.isNotEmpty)
           ? NetworkImage(photoUrl!)
           : null,
@@ -473,6 +494,7 @@ class _ReviewerAvatar extends StatelessWidget {
         style: AppTextStyle.inputBox.copyWith(
           fontSize: 12,
           fontWeight: FontWeight.w700,
+          color: colorScheme.onSurface,
         ),
       ),
     );
@@ -523,6 +545,7 @@ class _ReactButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
@@ -531,15 +554,29 @@ class _ReactButton extends StatelessWidget {
         decoration: BoxDecoration(
           color: isActive
               ? activeColor.withValues(alpha: 0.15)
-              : Colors.white,
+              : colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: isActive ? activeColor : AppColors.accent2),
+          border: Border.all(
+            color: isActive
+                ? activeColor
+                : colorScheme.onSurface.withValues(alpha: 0.14),
+          ),
         ),
         child: Row(
           children: [
-            Icon(icon, size: 14, color: isActive ? activeColor : AppColors.primary),
+            Icon(
+              icon,
+              size: 14,
+              color: isActive ? activeColor : colorScheme.primary,
+            ),
             const SizedBox(width: 4),
-            Text(label, style: AppTextStyle.inputBox.copyWith(fontSize: 11)),
+            Text(
+              label,
+              style: AppTextStyle.inputBox.copyWith(
+                fontSize: 11,
+                color: colorScheme.onSurface,
+              ),
+            ),
           ],
         ),
       ),
@@ -556,13 +593,16 @@ class _SectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.accent2),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.14),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -575,6 +615,7 @@ class _SectionCard extends StatelessWidget {
                   style: AppTextStyle.inputBox.copyWith(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -596,14 +637,18 @@ class _PhotoFallback extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Container(
-      color: const Color(0xFFEFE9DA),
+      color: colorScheme.primary.withValues(alpha: 0.10),
       alignment: Alignment.center,
       padding: const EdgeInsets.all(10),
       child: Text(
         label,
         textAlign: TextAlign.center,
-        style: AppTextStyle.inputBox.copyWith(fontSize: 12),
+        style: AppTextStyle.inputBox.copyWith(
+          fontSize: 12,
+          color: colorScheme.onSurface,
+        ),
       ),
     );
   }

@@ -109,6 +109,7 @@ class _ShopFormPageState extends ConsumerState<ShopFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final state = ref.watch(shopViewModelProvider);
     final isBusy = state.isSaving;
 
@@ -125,7 +126,7 @@ class _ShopFormPageState extends ConsumerState<ShopFormPage> {
                 'Update your shop details for customers.',
                 style: AppTextStyle.minimalTexts.copyWith(
                   fontSize: 13,
-                  color: Colors.grey.shade700,
+                  color: colorScheme.onSurface.withValues(alpha: 0.74),
                 ),
               ),
               const SizedBox(height: 14),
@@ -171,6 +172,7 @@ class _ShopFormPageState extends ConsumerState<ShopFormPage> {
                 style: AppTextStyle.inputBox.copyWith(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
+                  color: colorScheme.onSurface,
                 ),
               ),
               const SizedBox(height: 8),

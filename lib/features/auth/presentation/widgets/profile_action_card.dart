@@ -14,15 +14,19 @@ class ProfileActionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.border),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.12),
+        ),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.07),
+            color: colorScheme.primary.withValues(alpha: 0.07),
             blurRadius: 18,
             offset: const Offset(0, 6),
           ),
@@ -35,22 +39,27 @@ class ProfileActionCard extends StatelessWidget {
             color: Colors.transparent,
             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
             child: InkWell(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
               onTap: onSettingsTap,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 14,
+                ),
                 child: Row(
                   children: [
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: AppColors.surfaceStrong,
+                        color: colorScheme.primary.withValues(alpha: 0.12),
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.settings_outlined,
                         size: 20,
-                        color: AppColors.primary,
+                        color: colorScheme.primary,
                       ),
                     ),
                     const SizedBox(width: 16),
@@ -60,29 +69,39 @@ class ProfileActionCard extends StatelessWidget {
                         style: AppTextStyle.inputBox.copyWith(
                           fontSize: 15,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.textPrimary,
+                          color: colorScheme.onSurface,
                         ),
                       ),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.chevron_right_rounded,
-                      color: AppColors.textSecondary,
+                      color: colorScheme.onSurface.withValues(alpha: 0.66),
                     ),
                   ],
                 ),
               ),
             ),
           ),
-          const Divider(height: 1, color: AppColors.border),
+          Divider(
+            height: 1,
+            color: colorScheme.onSurface.withValues(alpha: 0.12),
+          ),
           // Logout row
           Material(
             color: Colors.transparent,
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+            borderRadius: const BorderRadius.vertical(
+              bottom: Radius.circular(20),
+            ),
             child: InkWell(
-              borderRadius: const BorderRadius.vertical(bottom: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                bottom: Radius.circular(20),
+              ),
               onTap: onLogoutTap,
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 14,
+                ),
                 child: Row(
                   children: [
                     Container(
@@ -108,9 +127,9 @@ class ProfileActionCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    const Icon(
+                    Icon(
                       Icons.chevron_right_rounded,
-                      color: AppColors.textSecondary,
+                      color: colorScheme.onSurface.withValues(alpha: 0.66),
                     ),
                   ],
                 ),

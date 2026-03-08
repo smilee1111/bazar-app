@@ -19,26 +19,28 @@ class NearestShopsToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final isDisabled = !categorySelected;
+    final baseLabelColor = colorScheme.onSurface;
+    final mutedLabelColor = colorScheme.onSurface.withValues(alpha: 0.72);
+    final disabledLabelColor = colorScheme.onSurface.withValues(alpha: 0.45);
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        onTap: isDisabled || isLoading
-            ? null
-            : () => onToggle(!isEnabled),
+        onTap: isDisabled || isLoading ? null : () => onToggle(!isEnabled),
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           decoration: BoxDecoration(
             color: isEnabled && !isDisabled
-                ? AppColors.primary.withValues(alpha: 0.08)
-                : AppColors.accent2.withValues(alpha: 0.3),
+                ? colorScheme.primary.withValues(alpha: 0.14)
+                : colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isEnabled && !isDisabled
-                  ? AppColors.primary.withValues(alpha: 0.4)
-                  : Colors.transparent,
+                  ? colorScheme.primary.withValues(alpha: 0.45)
+                  : colorScheme.onSurface.withValues(alpha: 0.12),
               width: 1.5,
             ),
           ),
@@ -49,8 +51,8 @@ class NearestShopsToggle extends StatelessWidget {
                     ? Icons.location_searching_rounded
                     : Icons.location_on_outlined,
                 color: isDisabled
-                    ? AppColors.textSecondary.withValues(alpha: 0.5)
-                    : (isEnabled ? AppColors.primary : AppColors.textSecondary),
+                    ? disabledLabelColor
+                    : (isEnabled ? colorScheme.primary : mutedLabelColor),
                 size: 22,
               ),
               const SizedBox(width: 12),
@@ -64,9 +66,7 @@ class NearestShopsToggle extends StatelessWidget {
                       style: AppTextStyle.inputBox.copyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
-                        color: isDisabled
-                            ? AppColors.textSecondary.withValues(alpha: 0.5)
-                            : AppColors.textPrimary,
+                        color: isDisabled ? disabledLabelColor : baseLabelColor,
                       ),
                     ),
                     const SizedBox(height: 2),
@@ -74,33 +74,35 @@ class NearestShopsToggle extends StatelessWidget {
                       isDisabled
                           ? 'Select a category first'
                           : (isLoading
-                              ? 'Getting your location...'
-                              : 'Filter shops near you'),
+                                ? 'Getting your location...'
+                                : 'Filter shops near you'),
                       style: AppTextStyle.minimalTexts.copyWith(
                         fontSize: 11,
                         color: isDisabled
-                            ? AppColors.textSecondary.withValues(alpha: 0.5)
-                            : AppColors.textSecondary,
+                            ? disabledLabelColor
+                            : mutedLabelColor,
                       ),
                     ),
                   ],
                 ),
               ),
               if (isLoading)
-                const SizedBox(
+                SizedBox(
                   width: 20,
                   height: 20,
                   child: CircularProgressIndicator(
                     strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation(AppColors.primary),
+                    valueColor: AlwaysStoppedAnimation(colorScheme.primary),
                   ),
                 )
               else
                 Switch(
                   value: isEnabled && !isDisabled,
                   onChanged: isDisabled ? null : onToggle,
-                  activeColor: AppColors.primary,
-                  inactiveThumbColor: AppColors.textSecondary,
+                  activeColor: colorScheme.primary,
+                  inactiveThumbColor: colorScheme.onSurface.withValues(
+                    alpha: 0.65,
+                  ),
                 ),
             ],
           ),

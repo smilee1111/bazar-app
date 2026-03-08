@@ -184,6 +184,7 @@ class _SellerApplicationPageState extends ConsumerState<SellerApplicationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final state = ref.watch(sellerApplicationViewModelProvider);
 
     return Scaffold(
@@ -206,7 +207,7 @@ class _SellerApplicationPageState extends ConsumerState<SellerApplicationPage> {
                       : 'Submit your business details for seller verification.',
                   style: AppTextStyle.minimalTexts.copyWith(
                     fontSize: 13,
-                    color: Colors.grey.shade700,
+                    color: colorScheme.onSurface.withValues(alpha: 0.74),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -457,11 +458,15 @@ class _DocumentUploadField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade400),
+        border: Border.all(
+          color: colorScheme.onSurface.withValues(alpha: 0.22),
+        ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -479,7 +484,7 @@ class _DocumentUploadField extends StatelessWidget {
             'Upload registration or verification document (optional).',
             style: AppTextStyle.minimalTexts.copyWith(
               fontSize: 12,
-              color: Colors.grey.shade700,
+              color: colorScheme.onSurface.withValues(alpha: 0.74),
             ),
           ),
           const SizedBox(height: 10),
@@ -487,7 +492,7 @@ class _DocumentUploadField extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
               decoration: BoxDecoration(
-                color: const Color(0xFFF7F7F7),
+                color: colorScheme.primary.withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
