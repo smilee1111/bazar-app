@@ -18,6 +18,7 @@ class SecuritySettingsPage extends StatelessWidget {
             style: AppTextStyle.inputBox.copyWith(
               fontSize: 18,
               fontWeight: FontWeight.w700,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 8),
@@ -96,6 +97,7 @@ class _SecurityOptionTile extends StatelessWidget {
                   style: AppTextStyle.inputBox.copyWith(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
+                    color: colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 3),

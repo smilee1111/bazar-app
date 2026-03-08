@@ -266,6 +266,7 @@ class _SellerApplicationPageState extends ConsumerState<SellerApplicationPage> {
                   style: AppTextStyle.inputBox.copyWith(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
+                    color: colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 8),
@@ -384,6 +385,7 @@ class _CategoryDropdownField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final hasOptions = categories.isNotEmpty;
     final validValue =
         selectedValue != null &&
@@ -397,12 +399,24 @@ class _CategoryDropdownField extends StatelessWidget {
         DropdownButtonFormField<String>(
           initialValue: validValue,
           isExpanded: true,
+          style: AppTextStyle.inputBox.copyWith(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: colorScheme.onSurface,
+          ),
           onChanged: isLoading || !hasOptions ? null : onChanged,
           items: categories
               .map(
                 (category) => DropdownMenuItem<String>(
                   value: category.categoryName,
-                  child: Text(category.categoryName),
+                  child: Text(
+                    category.categoryName,
+                    style: AppTextStyle.inputBox.copyWith(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color: colorScheme.onSurface,
+                    ),
+                  ),
                 ),
               )
               .toList(),
@@ -477,6 +491,7 @@ class _DocumentUploadField extends StatelessWidget {
             style: AppTextStyle.inputBox.copyWith(
               fontSize: 13,
               fontWeight: FontWeight.w700,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 4),
@@ -508,7 +523,10 @@ class _DocumentUploadField extends StatelessWidget {
                       fileName!,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyle.inputBox.copyWith(fontSize: 12),
+                      style: AppTextStyle.inputBox.copyWith(
+                        fontSize: 12,
+                        color: colorScheme.onSurface,
+                      ),
                     ),
                   ),
                   if (onRemoveTap != null)
