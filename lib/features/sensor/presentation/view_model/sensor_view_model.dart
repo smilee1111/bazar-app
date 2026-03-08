@@ -12,8 +12,10 @@ final sensorViewModelProvider = NotifierProvider<SensorViewModel, SensorState>(
 
 class SensorViewModel extends Notifier<SensorState> {
   static const double _gravity = 9.81;
-  static const double _shakeDeltaThreshold = 12.0;
+  static const double _shakeGForceThreshold = 2.2;
   static const double _movementDeltaThreshold = 1.2;
+  static const int _requiredShakeHits = 2;
+  static const Duration _shakeWindow = Duration(milliseconds: 700);
   static const Duration _shakeCooldown = Duration(seconds: 2);
   static const Duration _movementDecay = Duration(seconds: 3);
 
@@ -24,6 +26,8 @@ class SensorViewModel extends Notifier<SensorState> {
   StreamSubscription? _headingSubscription;
   Timer? _movementTimer;
   DateTime? _lastShakeTriggeredAt;
+  DateTime? _shakeWindowStartAt;
+  int _shakeHitCount = 0;
   int _activeClients = 0;
 
   @override
@@ -44,10 +48,7 @@ class SensorViewModel extends Notifier<SensorState> {
     _activeClients = math.max(0, _activeClients - 1);
     if (_activeClients > 0) return;
     _disposeStreams();
-    state = state.copyWith(
-      isActive: false,
-      isMoving: false,
-    );
+    state = state.copyWith(isActive: false, isMoving: false);
   }
 
   void _startStreams() {
@@ -61,19 +62,38 @@ class SensorViewModel extends Notifier<SensorState> {
 
   void _onMotion(MotionReading reading) {
     final delta = (reading.magnitude - _gravity).abs();
+    final gForce = reading.magnitude / _gravity;
     final now = DateTime.now();
 
     if (delta >= _movementDeltaThreshold) {
       _markMoving();
     }
 
-    if (delta < _shakeDeltaThreshold) return;
+    if (gForce < _shakeGForceThreshold) {
+      if (_shakeWindowStartAt != null &&
+          now.difference(_shakeWindowStartAt!) > _shakeWindow) {
+        _resetShakeWindow();
+      }
+      return;
+    }
+
     if (_lastShakeTriggeredAt != null &&
         now.difference(_lastShakeTriggeredAt!) < _shakeCooldown) {
       return;
     }
 
+    if (_shakeWindowStartAt == null ||
+        now.difference(_shakeWindowStartAt!) > _shakeWindow) {
+      _shakeWindowStartAt = now;
+      _shakeHitCount = 1;
+      return;
+    }
+
+    _shakeHitCount += 1;
+    if (_shakeHitCount < _requiredShakeHits) return;
+
     _lastShakeTriggeredAt = now;
+    _resetShakeWindow();
     state = state.copyWith(
       lastShakeAt: now,
       shakeCount: state.shakeCount + 1,
@@ -103,10 +123,16 @@ class SensorViewModel extends Notifier<SensorState> {
     _motionSubscription = null;
     _headingSubscription = null;
     _movementTimer = null;
+    _resetShakeWindow();
   }
 
   void _disposeAll() {
     _activeClients = 0;
     _disposeStreams();
+  }
+
+  void _resetShakeWindow() {
+    _shakeWindowStartAt = null;
+    _shakeHitCount = 0;
   }
 }
