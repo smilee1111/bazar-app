@@ -55,7 +55,16 @@ class _AccountSettingsPageState extends ConsumerState<AccountSettingsPage> {
     final app = state.application;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Account')),
+      appBar: AppBar(
+        title: Text(
+          'Account',
+          style: AppTextStyle.inputBox.copyWith(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            color: colorScheme.onSurface,
+          ),
+        ),
+      ),
       body: RefreshIndicator(
         onRefresh: () async {
           await ref
@@ -71,6 +80,7 @@ class _AccountSettingsPageState extends ConsumerState<AccountSettingsPage> {
               style: AppTextStyle.inputBox.copyWith(
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
+                color: colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 8),
@@ -205,6 +215,7 @@ class _NoApplicationCard extends StatelessWidget {
             style: AppTextStyle.inputBox.copyWith(
               fontSize: 16,
               fontWeight: FontWeight.w700,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 8),
@@ -269,6 +280,7 @@ class _InfoCard extends StatelessWidget {
                   style: AppTextStyle.inputBox.copyWith(
                     fontSize: 15,
                     fontWeight: FontWeight.w700,
+                    color: colorScheme.onSurface,
                   ),
                 ),
                 const SizedBox(height: 6),
@@ -344,6 +356,7 @@ class _ApplicationCard extends StatelessWidget {
                   style: AppTextStyle.inputBox.copyWith(
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
+                    color: colorScheme.onSurface,
                   ),
                 ),
               ),
@@ -411,6 +424,7 @@ class _InfoRow extends StatelessWidget {
               style: AppTextStyle.inputBox.copyWith(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
+                color: colorScheme.onSurface,
               ),
             ),
           ),

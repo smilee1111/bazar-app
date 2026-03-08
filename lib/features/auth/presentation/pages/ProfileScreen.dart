@@ -180,6 +180,7 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     final authState = ref.watch(authViewModelProvider);
     final session = ref.read(userSessionServiceProvider);
     final remotePicturePath =
@@ -239,7 +240,7 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
               style: AppTextStyle.inputBox.copyWith(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: AppColors.textPrimary,
+                color: colorScheme.onSurface,
               ),
             ),
             const SizedBox(height: 4),
@@ -247,7 +248,7 @@ class _ProfilescreenState extends ConsumerState<Profilescreen> {
               authState.user?.email ?? session.getCurrentUserEmail() ?? '',
               style: AppTextStyle.minimalTexts.copyWith(
                 fontSize: 13,
-                color: AppColors.secondary,
+                color: colorScheme.onSurface.withValues(alpha: 0.74),
               ),
             ),
             const SizedBox(height: 24),

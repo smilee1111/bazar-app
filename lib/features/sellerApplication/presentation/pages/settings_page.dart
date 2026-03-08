@@ -8,6 +8,8 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Settings')),
       body: ListView(
@@ -18,6 +20,7 @@ class SettingsPage extends StatelessWidget {
             style: AppTextStyle.inputBox.copyWith(
               fontSize: 16,
               fontWeight: FontWeight.w700,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 12),
@@ -108,6 +111,7 @@ class _SettingsOptionTile extends StatelessWidget {
                       style: AppTextStyle.inputBox.copyWith(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     const SizedBox(height: 4),
